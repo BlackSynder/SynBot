@@ -1,8 +1,9 @@
 from discord.ext.commands import Bot
 import os
-import info
 import time
 from discord.ext.commands import errors
+if os.path.isfile("info.py"):
+    import info
 
 
 token = os.environ.get("BOT_TOKEN")
