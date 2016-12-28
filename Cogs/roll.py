@@ -9,7 +9,7 @@ class DiceRoll:
 
     async def on_command_error(self, error, ctx):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.bot.send_message(ctx.message.author, 'Incorrect usage. Type `~help` for more info.')
+            await ctx.bot.send_message(ctx.message.author, 'Incorrect usage. Type `syn help` for more info.')
 
     async def delete_messages(self, message, author):
         async for historicMessage in self.bot.logs_from(message.channel):

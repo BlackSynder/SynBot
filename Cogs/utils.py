@@ -1,6 +1,5 @@
 from discord.ext import commands
 import discord
-import time
 import os
 import asyncio
 
@@ -29,7 +28,7 @@ class Utilities:
         A command used to mass delete messages.\nThis command deletes the last messages in the channel its invoked in. Use either from or amount.
         """
         if ctx.invoked_subcommand is None:
-            await ctx.bot.say("```Invalid Command. Use ~help for more info```")
+            await ctx.bot.say("Invalid Command. Use ``syn help`` for more info")
 
     @delete.command(pass_context=True)
     async def upto(self, ctx, date):
@@ -49,7 +48,7 @@ class Utilities:
             await ctx.bot.say(response)
             async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                 if log.content == response:
-                    time.sleep(5)
+                    asyncio.sleep(5)
                     await ctx.bot.delete_message(log)
                     print("%s has deleted %s messages in %s(%s)" % (ctx.message.author.name, count, ctx.message.channel, ctx.message.server))
         else:
@@ -57,7 +56,7 @@ class Utilities:
             await ctx.bot.say(response)
             async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                 if log.content == response:
-                    time.sleep(5)
+                    asyncio.sleep(5)
                     await ctx.bot.delete_message(log)
                     await ctx.bot.delete_message(ctx.message)
             print("%s tried to delete messages but isn't allowed." % ctx.message.author.name)
@@ -68,11 +67,11 @@ class Utilities:
         This deletes a specific amount of messages.\nFor example, if I wanted to delete the 13 last messages, I'd use !delete amount 13\nThe limit for this command is 500 messages
         """
         if msg_amount == 0:  # checks if you didnt enter an amount / amount is 0
-            response = ":exclamation: You must choose an amount to delete.\nSyntax: ``~delmsg 10``"
+            response = ":exclamation: You must choose an amount to delete.\nSyntax: ``syn delete amount 10``"
             await ctx.bot.say(response)
             async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                 if log.content == response:
-                    time.sleep(5)
+                    asyncio.sleep(5)
                     await ctx.bot.delete_message(log)
         else:
             if self.bot.is_whitelisted(ctx.message.server.id, ctx.message.author.id):  # checks if allowed to delete
@@ -85,7 +84,7 @@ class Utilities:
                 await self.bot.say(response)
                 async for log in self.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                     if log.content == response:
-                        time.sleep(5)
+                        asyncio.sleep(5)
                         await self.bot.delete_message(log)
                 print("%s has deleted %s messages in %s(%s)" % (ctx.message.author.name, count, ctx.message.channel, ctx.message.server))
             else:
@@ -93,7 +92,7 @@ class Utilities:
                 await self.bot.say(response)
                 async for log in self.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                     if log.content == response:
-                        time.sleep(5)
+                        asyncio.sleep(5)
                         await self.bot.delete_message(log)
                 print("%s tried to delete messages but isn't allowed." % ctx.message.author.name)
 

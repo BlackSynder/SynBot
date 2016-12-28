@@ -1,16 +1,7 @@
 from discord.ext import commands
 import discord
-import time
+import asyncio
 import os
-# import asyncio
-# import threading
-# def stop_loop():
-#     input('Press <enter> to stop')
-#     loop.call_soon_threadsafe(loop.stop)
-# loop = asyncio.get_event_loop()
-# threading.Thread(target=stop_loop).start()
-# loop.run_forever()
-# loop.close()
 
 
 class Administration:
@@ -23,7 +14,7 @@ class Administration:
         Manages the whitelist.\nIn order to use this command you need to be an admin.
         """
         if ctx.invoked_subcommand is None:
-            await ctx.bot.say("```Invalid Command. Use ~help for more info```")
+            await ctx.bot.say("Invalid Command. Use ``syn help`` for more info")
 
     @wl.command(pass_context=True)
     async def add(self, ctx, member: discord.Member):
@@ -35,7 +26,7 @@ class Administration:
             await ctx.bot.say(response)
             async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                 if log.content == response:
-                    time.sleep(5)
+                    asyncio.sleep(5)
                     await ctx.bot.delete_message(log)
         else:
             if self.bot.is_whitelisted(ctx.message.server.id, member.id):
@@ -58,7 +49,7 @@ class Administration:
             await ctx.bot.say(response)
             async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                 if log.content == response:
-                    time.sleep(5)
+                    asyncio.sleep(5)
                     await ctx.bot.delete_message(log)
                     await ctx.bot.delete_message(ctx.message)
         else:
@@ -76,7 +67,7 @@ class Administration:
                 await ctx.bot.say(response)
                 async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                     if log.content == response:
-                        time.sleep(5)
+                        asyncio.sleep(5)
                         await ctx.bot.delete_message(log)
                         await ctx.bot.delete_message(ctx.message)
             else:
@@ -84,7 +75,7 @@ class Administration:
                 await ctx.bot.say(response)
                 async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
                     if log.content == response:
-                        time.sleep(5)
+                        asyncio.sleep(5)
                         await ctx.bot.delete_message(log)
                         await ctx.bot.delete_message(ctx.message)
 

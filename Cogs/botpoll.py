@@ -13,7 +13,7 @@ class StrawPollMaker:
         """
         if ctx.invoked_subcommand is None:
             print("poll")
-            await ctx.bot.say("```Invalid Command. Use ~help for more info```")
+            await ctx.bot.say("Invalid Command. Use ``syn help`` for more info")
 
     @poll.command(pass_context=True)
     async def create(self, ctx, poll_title):
