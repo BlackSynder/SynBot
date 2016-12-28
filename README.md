@@ -1,4 +1,5 @@
 # SynBot
 A Discord Bot wrriten in python using the discord.py lib.
 
-Replace the token in info.py with your bot token to run.
+Create a text file and name it "info.py" (remove the .txt) then enter this:
+bot_token = "YOUR TOKEN HERE"
