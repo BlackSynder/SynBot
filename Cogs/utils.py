@@ -107,12 +107,6 @@ class Utilities:
                     count = 0
                 await ctx.bot.add_roles(member, role)
 
-    @commands.command(pass_context=True, hidden=True)
-    async def fuckthislol(self, ctx, amount):
-        await self.bot.delete_message(ctx.message)
-        async for log in self.bot.logs_from(ctx.message.channel, limit=int(amount)):  # loop for deletion
-            await self.bot.delete_message(log)
-
 
 def setup(bot):
     bot.add_cog(Utilities(bot))
