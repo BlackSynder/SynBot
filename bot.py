@@ -42,6 +42,8 @@ class SynBot(Bot):
 
     def is_whitelisted(self, server_id, user_id):  # checks the wl file if someone can use a command
         filename = "whitelist-%s.txt" % server_id
+        if not os.path.isdir("Server Configs"):
+            os.mkdir("Server Configs")
         path = os.path.join("Server Configs", filename)
         if not os.path.isfile(path):
             open(path, "w").close()
