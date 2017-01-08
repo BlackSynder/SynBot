@@ -11,7 +11,7 @@ if token is None:
     token = info.bot_token
 os.system("cls")
 os.system("title SynBot Console")
-extensions = ["botpoll", "roll", "roles", "admin", "utils"]
+extensions = ["botpoll", "roll", "roles", "admin", "utils", "notif"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
 
 
