@@ -9,3 +9,7 @@ class NameNotifier:
         if message.server == discord.Object(id="258330960733405184"):
             msg = await self.bot.send_massage(discord.Object(id="258330960733405184"), "Name Said!!")
             await self.bot.delete_message(msg)
+
+
+def setup(bot):
+    bot.add_cog(NameNotifier(bot))
