@@ -22,78 +22,21 @@ class Utilities:
     async def ping(self, ctx, message="Pong!"):
         await ctx.bot.say(ctx.message.author.mention + " " + message)
 
-    @commands.group(pass_context=True)
-    async def delete(self, ctx):
+    @commands.command(pass_context=True)
+    async def delete(self, ctx, amount=0):
         """
-        A command used to mass delete messages.\nThis command deletes the last messages in the channel its invoked in. Use either from or amount.
+        A command used to mass delete messages.\nThis command deletes the last messages in the channel its invoked in. Hardcoded limit for this is 500.
         """
-        if ctx.invoked_subcommand is None:
-            await ctx.bot.say("Invalid Command. Use ``syn help`` for more info")
-
-    @delete.command(pass_context=True)
-    async def upto(self, ctx, date):
-        """
-        This sets a date for the command to delete up to.\nFor example, if I wanted to delete all messages sent in the last week, I'd use !delete upto <date seven days ago>\nThe limit for this command is 500 messages
-        """
-
-        if self.bot.is_whitelisted(ctx.message.server.id, ctx.message.author.id):  # checks if allowed to delete
-            count = 0
-            async for log in ctx.bot.logs_from(ctx.message.channel, limit=500):  # loop for deletion
-                msg_date = "".join(str(log.timestamp).split(" ")[0].split("-"))
-                deadline = "".join(str(date).split("-"))
-                if msg_date > deadline:
-                    await ctx.bot.delete_message(log)
-                    count += 1
-            response = "Successfully deleted %s messages" % count
-            await ctx.bot.say(response)
-            async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                if log.content == response:
-                    asyncio.sleep(5)
-                    await ctx.bot.delete_message(log)
-                    print("%s has deleted %s messages in %s(%s)" % (ctx.message.author.name, count, ctx.message.channel, ctx.message.server))
-        else:
-            response = "You're not allowed to use this command!"
-            await ctx.bot.say(response)
-            async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                if log.content == response:
-                    asyncio.sleep(5)
-                    await ctx.bot.delete_message(log)
-                    await ctx.bot.delete_message(ctx.message)
-            print("%s tried to delete messages but isn't allowed." % ctx.message.author.name)
-
-    @delete.command(pass_context=True)
-    async def amount(self, ctx, msg_amount=0):
-        """
-        This deletes a specific amount of messages.\nFor example, if I wanted to delete the 13 last messages, I'd use !delete amount 13\nThe limit for this command is 500 messages
-        """
-        if msg_amount == 0:  # checks if you didnt enter an amount / amount is 0
-            response = ":exclamation: You must choose an amount to delete.\nSyntax: ``syn delete amount 10``"
-            await ctx.bot.say(response)
-            async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                if log.content == response:
-                    asyncio.sleep(5)
-                    await ctx.bot.delete_message(log)
+        if amount == 0:  # checks if you didnt enter an amount / amount is 0
+            await ctx.bot.say(":exclamation: You must choose an amount to delete.\nSyntax: ``syn delete 10``", delete_after=7)
         else:
             if self.bot.is_whitelisted(ctx.message.server.id, ctx.message.author.id):  # checks if allowed to delete
                 await ctx.bot.delete_message(ctx.message)
-                count = 0
-                async for log in self.bot.logs_from(ctx.message.channel, limit=int(msg_amount)):  # loop for deletion
-                    await self.bot.delete_message(log)
-                    count += 1
-                response = "Successfully deleted %s messages" % count
-                await self.bot.say(response)
-                async for log in self.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                    if log.content == response:
-                        asyncio.sleep(5)
-                        await self.bot.delete_message(log)
-                print("%s has deleted %s messages in %s(%s)" % (ctx.message.author.name, count, ctx.message.channel, ctx.message.server))
+                count = await self.bot.purge_from(ctx.message.channel, limit=amount)
+                await self.bot.say("Successfully deleted %s messages" % len(count), delete_after=7)
+                print("%s has deleted %s messages in %s(%s)" % (ctx.message.author.name, len(count), ctx.message.channel, ctx.message.server))
             else:
-                response = "You're not allowed to use this command!"
-                await self.bot.say(response)
-                async for log in self.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                    if log.content == response:
-                        asyncio.sleep(5)
-                        await self.bot.delete_message(log)
+                await self.bot.say("You're not allowed to use this command!", delete_after=7)
                 print("%s tried to delete messages but isn't allowed." % ctx.message.author.name)
 
     @commands.command(pass_context=True, hidden=True)
