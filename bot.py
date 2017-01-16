@@ -21,9 +21,7 @@ class SynBot(Bot):
 
     async def on_command_error(self, error, ctx):
         if isinstance(error, errors.CommandNotFound):
-            msg = await ctx.bot.send_message(ctx.message.channel, ":moyai: Command was not found! Type `{}help` for more info.".format(ctx.bot.command_prefix))
-            asyncio.sleep(7)
-            await ctx.bot.delete_message(msg)
+            await ctx.bot.say(":moyai: Command was not found! Type `{}help` for more info.".format(ctx.bot.command_prefix), delete_after=7)
 
     async def on_ready(self):
         print('Logged in!')
