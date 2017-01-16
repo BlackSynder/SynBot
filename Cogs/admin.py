@@ -22,12 +22,7 @@ class Administration:
         Adds a user to the whitelist.\nUsers in the whitelist can use advanced commands.\n\nCommands:\n~delete\n~role\n~assign
         """
         if not self.bot.is_admin(ctx.message.author.id):
-            response = "You're not allowed to use this command! :angry:"
-            await ctx.bot.say(response)
-            async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                if log.content == response:
-                    asyncio.sleep(5)
-                    await ctx.bot.delete_message(log)
+            await ctx.bot.say("You're not allowed to use this command! :angry:", delete_after=7)
         else:
             if self.bot.is_whitelisted(ctx.message.server.id, member.id):
                 await ctx.bot.say("%s is already in the whitelist!" % member.name)
@@ -45,13 +40,7 @@ class Administration:
         Removes a user from the whitelist.\nOnce this is issued, the user will forever be removed. Use the add command to readd to the whitelist.
         """
         if not self.bot.is_admin(ctx.message.author.id):
-            response = "You're not allowed to use this command! :angry:"
-            await ctx.bot.say(response)
-            async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                if log.content == response:
-                    asyncio.sleep(5)
-                    await ctx.bot.delete_message(log)
-                    await ctx.bot.delete_message(ctx.message)
+            await ctx.bot.say("You're not allowed to use this command! :angry:", delete_after=7)
         else:
             if self.bot.is_whitelisted(ctx.message.server.id, member.id):
                 filename = "whitelist-%s.txt" % ctx.message.server.id
@@ -63,21 +52,10 @@ class Administration:
                         if not line.startswith(member.id):
                             f.write(line)
                     f.truncate()
-                response = "Removed %s from the whitelist successfully :ok_hand:" % member.name
-                await ctx.bot.say(response)
-                async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                    if log.content == response:
-                        asyncio.sleep(5)
-                        await ctx.bot.delete_message(log)
-                        await ctx.bot.delete_message(ctx.message)
+                await ctx.bot.say("Removed %s from the whitelist successfully :ok_hand:" % member.name, delete_after=7)
             else:
-                response = "%s is not whitelisted!" % member.name
-                await ctx.bot.say(response)
-                async for log in ctx.bot.logs_from(ctx.message.channel, limit=5):  # deletes the response
-                    if log.content == response:
-                        asyncio.sleep(5)
-                        await ctx.bot.delete_message(log)
-                        await ctx.bot.delete_message(ctx.message)
+                await ctx.bot.say("%s is not whitelisted!" % member.name, delete_after=7)
+        await ctx.bot.delete_message(ctx.message)
 
 
 def setup(bot):
