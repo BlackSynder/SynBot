@@ -81,7 +81,7 @@ class DiceRoll:
             pass
 
     @commands.command(pass_context=True)
-    async def dndroll(self):
+    async def dndroll(self, ctx):
         total = 0
         final_list = []
         while total not in range(70, 80):
@@ -95,6 +95,7 @@ class DiceRoll:
                 final_list.append(sum(roll_list))
             total = sum(final_list)
         await self.bot.say("Your stats are:\n{stats}\nTotal roll score: {total}".format(stats=str([x for x in final_list]), total=total))
+        print("%s has rolled D&D stats in %s and got %s(%s)" % (ctx.message.author.name, ctx.message.server, str([x for x in final_list]), total))
 
 
 def setup(bot):
