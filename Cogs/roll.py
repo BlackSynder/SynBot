@@ -80,6 +80,21 @@ class DiceRoll:
         else:
             pass
 
+    @commands.command(pass_context=True)
+    async def dndroll(self):
+        total = 0
+        while total not in range(70, 80):
+            final_list = []
+            for stat in range(6):
+                roll_list = []
+                for r in range(4):
+                    roll = random.randint(1, 6)
+                    roll_list.append(roll)
+                roll_list.remove(min(roll_list))
+                final_list.append(sum(roll_list))
+            total = sum(final_list)
+            await self.bot.say("Your stats are:\n{stats}\nTotal roll score: {total}".format(stats=str([x for x in final_list]), total=total))
+
 
 def setup(bot):
     bot.add_cog(DiceRoll(bot))
