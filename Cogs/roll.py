@@ -17,12 +17,17 @@ class DiceRoll:
                 if (author.name in historicMessage.content) or (author.mention in historicMessage.content) or (':game_die:' in historicMessage.content):
                     await self.bot.delete_message(historicMessage)
 
-            if historicMessage.content.startswith('.r'):
+            if historicMessage.content.startswith('syn r'):
                 if author == historicMessage.author:
                     try:
                         await self.bot.delete_message(historicMessage)
                     except:
                         hi = 'hello'
+    async def log_rolls(self, server, log_msg):
+        if server.id == "267135631103229954":
+            await self.bot.send_mesage(discord.Object(id="267436115139624970"), log_msg)
+        elif server.id == "210157550044315648":
+            await self.bot.send_mesage(discord.Object(id="272783366837895181"), log_msg)
 
     @commands.command(pass_context=True)
     async def r(self, ctx, dice: str, plus=None):
@@ -75,10 +80,7 @@ class DiceRoll:
             log = "%s has rolled %s %s in %s and got %s" % (ctx.message.author.name, dice, plus, ctx.message.server, result_total)
             print("%s has rolled %s %s in %s and got %s" % (ctx.message.author.name, dice, plus, ctx.message.server, result_total))
 
-        if ctx.message.server.id == "229922717200154626":
-            await ctx.bot.send_message(discord.Object(id=240874243221356546), log)
-        else:
-            pass
+        await self.log_rolls(ctx.message.server, log)
 
     @commands.command(pass_context=True)
     async def dndroll(self, ctx):
