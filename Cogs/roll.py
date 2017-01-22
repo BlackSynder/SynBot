@@ -25,9 +25,9 @@ class DiceRoll:
                         hi = 'hello'
     async def log_rolls(self, server, log_msg):
         if server.id == "267135631103229954":
-            await self.bot.send_mesage(discord.Object(id="267436115139624970"), log_msg)
+            await self.bot.send_message(discord.Object(id="267436115139624970"), log_msg)
         elif server.id == "210157550044315648":
-            await self.bot.send_mesage(discord.Object(id="272783366837895181"), log_msg)
+            await self.bot.send_message(discord.Object(id="272783366837895181"), log_msg)
 
     @commands.command(pass_context=True)
     async def r(self, ctx, dice: str, plus=None):
