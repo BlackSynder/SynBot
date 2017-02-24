@@ -9,7 +9,7 @@ class NameNotifier:
             return
         if message.channel.id == "258330960733405184":
             em = discord.Embed.from_data(message.embeds[0])
-            self.bot.delete_message(message)
+            await self.bot.delete_message(message)
             await self.bot.send_message(message.channel, embed=em)
 
 def setup(bot):
