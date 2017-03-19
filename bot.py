@@ -11,13 +11,13 @@ if token is None:
     token = info.bot_token
 os.system("cls")
 os.system("title SynBot Console")
-extensions = ["botpoll", "roll", "roles", "admin", "utils", "notif"]
+extensions = ["botpoll", "roll", "roles", "admin", "utils", "notif", "search"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
 
 
 class SynBot(Bot):
     def __init__(self):
-        super().__init__(command_prefix="syn ", description="Misc Bot")
+        super().__init__(command_prefix=["syn", "s!"], description="Misc Bot")
 
     async def on_command_error(self, error, ctx):
         if isinstance(error, errors.CommandNotFound):

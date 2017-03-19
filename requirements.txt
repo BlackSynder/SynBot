@@ -24,3 +24,4 @@ tqdm==4.8.4
 virtualenv==15.0.3
 websockets==3.2
 youtube-dl==2016.10.21.1
+lxml>=3.7.3
