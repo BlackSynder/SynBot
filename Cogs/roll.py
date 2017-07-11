@@ -1,89 +1,65 @@
 from discord.ext import commands
 import discord
 import random
+import re
 
 
 class DiceRoll:
     def __init__(self, bot):
         self.bot = bot
 
-    async def on_command_error(self, error, ctx):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.bot.send_message(ctx.message.author, 'Incorrect usage. Type `syn help` for more info.')
+    @commands.command(aliases=["rng", "r"])
+    async def roll(self, ctx, rng):
+        """Roll a dice.\nSupports Addition(+), Subtraction(-), Multiplication(*, x), Division(/).\nExample: s!roll 4d20+5"""
+        pattern = r"((\d+)d(\d))([+\-*\/x]\d+)?"
+        match = re.search(pattern, rng)
+        if match:
+            rolls = []
+            dice_amount = int(match.group(2))
+            if dice_amount > 200:
+                await ctx.send(":exclamation: Thats WAAAAAAY too many dice!", delete_after=10)
+            dice_type = int(match.group(3))
+            try:
+                # +N or -N
+                math = int(match.group(4))
+            except ValueError:
+                # either xN, *N or /N
+                if match.group(4):
+                    math = None
+                    math_action = match.group(4)[0]
+                    math_number = int(match.group(4)[1:])
+            except TypeError:
+                # none, so no math
+                pass
+            for roll in range(dice_amount):
+                rolls.append(random.randint(1, dice_type))
+            total = sum(rolls)
 
-    async def delete_messages(self, message, author):
-        async for historicMessage in self.bot.logs_from(message.channel):
-            if historicMessage.author == self.bot.user:
-                if (author.name in historicMessage.content) or (author.mention in historicMessage.content) or (':game_die:' in historicMessage.content):
-                    await self.bot.delete_message(historicMessage)
-
-            if historicMessage.content.startswith('syn r'):
-                if author == historicMessage.author:
-                    try:
-                        await self.bot.delete_message(historicMessage)
-                    except:
-                        hi = 'hello'
-    async def log_rolls(self, server, log_msg):
-        if server.id == "267135631103229954":
-            await self.bot.send_message(discord.Object(id="267436115139624970"), log_msg)
-        elif server.id == "210157550044315648":
-            await self.bot.send_message(discord.Object(id="272783366837895181"), log_msg)
-
-    @commands.command(pass_context=True)
-    async def r(self, ctx, dice: str, plus=None):
-        """Rolls a dice using XdX format.
-        e.g ~r 3d6"""
-        if plus is None:
-            plus = "+0"
-
-        total_plus = str(plus.split("+")[1])
-
-        result_total = 0
-        result_string = ''
-
-        try:
-            dice_amount = dice.split('d')[0]
-            dice_sides = dice.split('d')[1]  # .split('+')[0]
-        except Exception:
-            await ctx.bot.say("Format has to be in xdx %s." % ctx.message.author)
-            return
-
-        if int(dice_amount) > 50:
-            await ctx.bot.say("Are you retarded? I cant roll that many dice, %s." % ctx.message.author.name)
-            return
-
-        await self.delete_messages(ctx.message, ctx.message.author)
-
-        ctx.bot.type()
-        await ctx.bot.say("─:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:─\nRolling %s d%s for %s" % (dice_amount, dice_sides, ctx.message.author.mention))
-        for r in range(int(dice_amount)):
-            number = random.randint(1, int(dice_sides))
-            result_total = result_total + number + int(total_plus)
-            if result_string == '':
-                result_string += str(number)
+            if match.group(4):
+                if math:
+                    total += math
+                else:
+                    if math_action == "*" or math_action == "x":
+                        total *= math_number
+                    else:
+                        total /= math_number
+            if total < 0:
+                total = 0
+            embed = discord.Embed(title="\N{GAME DIE} Dice Rolled! \N{GAME DIE}")
+            embed.add_field(name="Dice", value=match.group(1), inline=True)
+            embed.add_field(name="Results", value=rolls, inline=True)
+            if match.group(4):
+                embed.add_field(name="Total", value=f"{total} ({sum(rolls)})", inline=False)
             else:
-                result_string += ', ' + str(number + int(total_plus))
+                embed.add_field(name="Total", value=total, inline=False)
+            await ctx.send(embed=embed)
 
-        if total_plus != "0":
-            result_string += ",+" + str(total_plus)
-
-        if dice_amount == '1':
-
-            await ctx.bot.say("  **Result:** " + result_string + "\n**Total:** " + str(
-                result_total) + "\n─:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:─")
-            log = "%s has rolled %s %s in %s and got %s" % (ctx.message.author.name, dice, plus, ctx.message.server, result_total)
-            print("%s has rolled %s %s in %s and got %s" % (ctx.message.author.name, dice, plus, ctx.message.server, result_total))
         else:
+            await ctx.send(":exclamation: Not a valid dice roll!", delete_after=10)
 
-            await ctx.bot.say("  **Result:** " + result_string + "\n**Total:** " + str(
-                result_total) + "\n─:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:──:game_die:─")
-            log = "%s has rolled %s %s in %s and got %s" % (ctx.message.author.name, dice, plus, ctx.message.server, result_total)
-            print("%s has rolled %s %s in %s and got %s" % (ctx.message.author.name, dice, plus, ctx.message.server, result_total))
-
-        await self.log_rolls(ctx.message.server, log)
-
-    @commands.command(pass_context=True)
-    async def dndroll(self, ctx):
+    @commands.command(aliases=["dndroll"])
+    async def statroll(self, ctx):
+        """Roll D&D stats"""
         total = 0
         final_list = []
         while total not in range(70, 80):
@@ -96,8 +72,7 @@ class DiceRoll:
                 roll_list.remove(min(roll_list))
                 final_list.append(sum(roll_list))
             total = sum(final_list)
-        await self.bot.say("Your stats are:\n{stats}\nTotal roll score: {total}".format(stats=str([x for x in final_list]), total=total))
-        print("%s has rolled D&D stats in %s and got %s(%s)" % (ctx.message.author.name, ctx.message.server, str([x for x in final_list]), total))
+        await ctx.send("Your stats are:\n{stats}\nTotal roll score: {total}".format(stats=str([x for x in final_list]), total=total))
 
 
 def setup(bot):

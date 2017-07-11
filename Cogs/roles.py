@@ -1,24 +1,21 @@
 from discord.ext import commands
 import discord
 import os
+from paginator import Pages
 
-
-class EmojiRoles:
+class Roles:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context=True)
-    async def getroles(self, ctx):
+    @commands.command()
+    async def roles(self, ctx):
         """Gets a list of all roles in the server"""
-        response = "`Roles ID:`"
-        for role in ctx.message.server.roles:
-            if not role.is_everyone:
-                if len(ctx.message.server.roles) > 15:
-                    await ctx.bot.say(response)
-                    response = "\n" + "Role name: %s ID: %s" % (role.name, role.id)
-                else:
-                    response += "\n" + "Role name: %s ID: %s" % (role.name, role.id)
-        await ctx.bot.say(response)
+        try:
+            p = Pages(self.bot, message=ctx.message, entries=[r.mention for r in ctx.guild.roles if not r.is_default])
+            p.embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon)
+            await p.paginate()
+        except Exception as e:
+            await ctx.send(e)
 
 def setup(bot):
     bot.add_cog(EmojiRoles(bot))
