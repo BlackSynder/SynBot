@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
-import os
+import os, sys
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from paginator import Pages
 
 class Roles:
@@ -18,4 +19,4 @@ class Roles:
             await ctx.send(e)
 
 def setup(bot):
-    bot.add_cog(EmojiRoles(bot))
+    bot.add_cog(Roles(bot))
