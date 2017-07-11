@@ -5,7 +5,7 @@ import asyncio
 
 
 token = os.environ.get("BOT_TOKEN")
-extensions = ["botpoll", "roll", "roles", "admin", "utils", "notif", "search"]
+extensions = ["roll", "roles", "utils", "notif", "search"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
 
 
