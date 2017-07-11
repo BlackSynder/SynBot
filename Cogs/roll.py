@@ -11,7 +11,7 @@ class DiceRoll:
     @commands.command(aliases=["rng", "r"])
     async def roll(self, ctx, rng):
         """Roll a dice.\nSupports Addition(+), Subtraction(-), Multiplication(*, x), Division(/).\nExample: s!roll 4d20+5"""
-        pattern = r"((\d+)d(\d))([+\-*\/x]\d+)?"
+        pattern = r"((\d+)d(\d+))([+\-*\/x]\d+)?"
         match = re.search(pattern, rng)
         if match:
             rolls = []
