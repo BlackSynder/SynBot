@@ -11,7 +11,7 @@ startup_extensions = ["Cogs." + extension for extension in extensions]
 
 class SynBot(Bot):
     def __init__(self):
-        super().__init__(command_prefix=["syn ", "s!"], description="Misc Bot")
+        super().__init__(command_prefix=["syn ", "s!"], description="Misc Bot", game=discord.Game(name="s!help | syn help"))
 
     async def on_ready(self):
         print('Logged in!')
