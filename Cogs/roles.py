@@ -1,8 +1,9 @@
+from Cogs.paginator import Pages
+
 from discord.ext import commands
 import discord
 import os, sys
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-from paginator import Pages
+# sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 class Roles:
     def __init__(self, bot):
