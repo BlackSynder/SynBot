@@ -12,7 +12,7 @@ class Roles:
     async def roles(self, ctx):
         """Gets a list of all roles in the server"""
         try:
-            roles = [r.mention for r in ctx.guild.roles if not r.is_default]
+            roles = [r.mention for r in ctx.guild.roles if not r.is_default()]
             p = Pages(self.bot, message=ctx.message, entries=roles)
             p.embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon_url)
             await p.paginate()
