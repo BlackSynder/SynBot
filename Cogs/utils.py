@@ -84,6 +84,7 @@ class Utilities:
 
     @commands.command(aliased=["join", "inv"])
     async def invite(self, ctx):
-        await ctx.send(f"<{discord.utils.oauth_url(bot.user.id)}>")
+        """Sends an invite link for the bot"""
+        await ctx.send(f"<{discord.utils.oauth_url(self.bot.user.id)}>")
 def setup(bot):
     bot.add_cog(Utilities(bot))
