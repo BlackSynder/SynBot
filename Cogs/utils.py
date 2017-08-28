@@ -81,10 +81,6 @@ class Utilities:
                 await ctx.send(f"```{result}```")
         except Exception as e:
             await ctx.send(f"```{type(e).__name__ + ': ' + str(e)}```")
-    
-    @commands.command()
-    async def ping(self, ctx, message="Pong!"):
-        await ctx.send(ctx.author.mention + " " + message)
 
 def setup(bot):
     bot.add_cog(Utilities(bot))
