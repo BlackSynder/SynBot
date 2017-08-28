@@ -82,5 +82,8 @@ class Utilities:
         except Exception as e:
             await ctx.send(f"```{type(e).__name__ + ': ' + str(e)}```")
 
+    @commands.command(aliased=["join", "inv"])
+    async def invite(self, ctx):
+        await ctx.send(f"<{discord.utils.oauth_url(bot.user.id)}>")
 def setup(bot):
     bot.add_cog(Utilities(bot))
