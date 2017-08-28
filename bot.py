@@ -1,10 +1,10 @@
-from discord.ext.commands import Bot
 import os
-import asyncio
+import discord
+from discord.ext.commands import Bot
 
 
 
-token = os.environ.get("BOT_TOKEN")
+TOKEN = os.environ.get("BOT_TOKEN")
 extensions = ["roll", "roles", "utils", "search"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
 
@@ -28,4 +28,4 @@ class SynBot(Bot):
                 print('Failed to load extension {}\n{}'.format(extension, exc))
         print('------')
 
-SynBot().run(token)
+SynBot().run(TOKEN)
