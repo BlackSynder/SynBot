@@ -1,5 +1,6 @@
 import os
 import discord
+from discord.ext import commands
 from discord.ext.commands import Bot
 
 
@@ -11,7 +12,9 @@ startup_extensions = ["Cogs." + extension for extension in extensions]
 
 class SynBot(Bot):
     def __init__(self):
-        super().__init__(command_prefix=["syn ", "s!"], description="Misc Bot", game=discord.Game(name="s!help | syn help"))
+        game = discord.Game(name="s!help | syn help")
+        prefix = commands.when_mentioned_or("syn ", "s!")
+        super().__init__(command_prefix=prefix, description="Misc Bot", game=game)
 
     async def on_ready(self):
         print('Logged in!')
