@@ -12,7 +12,7 @@ startup_extensions = ["Cogs." + extension for extension in extensions]
 
 class SynBot(Bot):
     def __init__(self):
-        game = discord.Game(name="s!help | syn help")
+        game = discord.Game(name="s!help | syn help", type=2)
         prefix = commands.when_mentioned_or("syn ", "s!")
         super().__init__(command_prefix=prefix, description="Misc Bot", game=game)
 
