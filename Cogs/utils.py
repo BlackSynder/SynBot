@@ -1,10 +1,13 @@
-from discord.ext import commands
-import discord
 import os
 import asyncio
 import inspect
 import textwrap
+import base64
+from io import BytesIO
+
 import tokage
+import discord
+from discord.ext import commands
 
 
 class Utilities:
@@ -87,5 +90,14 @@ class Utilities:
         """Sends an invite link for the bot"""
         await ctx.send("https://discordapp.com/oauth2/authorize/?permissions=64&scope=bot&client_id=236176083861372928")
 
+    class ByteString(commands.Converter):
+        async def convert(self, ctx, arg):
+            return bytes(arg)
+    
+    @commands.command()
+    async def img64(self, ctx, *, b64: ByteString):
+        f = BytesIO(base64.decodebytes(b64))
+        await ctx.send(file=discord.File(f, "img.png"))
+        
 def setup(bot):
     bot.add_cog(Utilities(bot))
