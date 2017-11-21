@@ -21,7 +21,7 @@ class Utilities:
         for pic, i in enumerate(pics):
             fmt += f"[{i+1}] - {pic}\n"
         img_msg = await ctx.send(fmt)
-        check = lambda m: m.author == ctx.author and m.channel = ctx.channel
+        check = lambda m: m.author == ctx.author and m.channel == ctx.channel
         try:
             msg = await self.bot.wait_for("message", check=check, timeout=35)
         except asyncio.TimeoutError:
