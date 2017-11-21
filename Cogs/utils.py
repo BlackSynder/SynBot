@@ -14,15 +14,29 @@ class Utilities:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(hidden=True, enabled=False)
-    async def setavatar(self, ctx, picture):
-        path = os.path.join("Bot Pics", picture)
+    @commands.command(hidden=True)
+    async def setavatar(self, ctx, picture=None):
+        pics = os.listdir("Bot Pics")
+        fmt = "Enter pic number to set:\n"
+        for pic, i in enumerate(pics):
+            fmt += f"[{i+1}] - {pic}\n"
+        img_msg = await ctx.send(fmt)
+        check = lambda m: m.author == ctx.author and m.channel = ctx.channel
         try:
-            with open('%s' % path, 'rb') as f:
-                await ctx.bot.user.edit(avatar=f.read())
-            await ctx.send(":ok_hand: Avatar changed to %s" % picture.split(".")[0])
-        except Exception:
-            await ctx.send(":exclamation: File not found!")
+            msg = await self.bot.wait_for("message", check=check, timeout=35)
+        except asyncio.TimeoutError:
+            await img_msg.delete()
+            return await ctx.send("Timeout. Please try again later.")
+        img_num = int(msg)-1
+        if img_num > len(pics):
+            await img_msg.delete()
+            return await ctx.send("This image doesnt exist!")
+        img_name = pics[img_num]
+    
+        with open(img_name, "rb") as f:
+            await ctx.bot.user.edit(avatar=f.read())
+        await ctx.send("Changed image to " + img_name)
+
 
     @commands.command(hidden=True, aliases=["eval", "evaluate"])
     @commands.is_owner()
