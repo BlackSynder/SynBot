@@ -18,7 +18,7 @@ class Utilities:
     async def setavatar(self, ctx):
         pics = os.listdir("Bot Pics")
         fmt = "Enter pic number to set:\n"
-        for pic, i in enumerate(pics):
+        for i, pic in enumerate(pics):
             fmt += f"[{i+1}] - {pic}\n"
         img_msg = await ctx.send(fmt)
         check = lambda m: m.author == ctx.author and m.channel == ctx.channel
@@ -32,7 +32,7 @@ class Utilities:
             await img_msg.delete()
             return await ctx.send("This image doesnt exist!")
         img_name = pics[img_num]
-    
+
         with open(img_name, "rb") as f:
             await ctx.bot.user.edit(avatar=f.read())
         await ctx.send("Changed image to " + img_name)
