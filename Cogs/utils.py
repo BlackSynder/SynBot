@@ -92,12 +92,12 @@ class Utilities:
 
     class ByteString(commands.Converter):
         async def convert(self, ctx, arg):
-            return bytes(arg)
-    
+            return bytes(arg, 'utf-8')
+
     @commands.command()
     async def img64(self, ctx, *, b64: ByteString):
         f = BytesIO(base64.decodebytes(b64))
         await ctx.send(file=discord.File(f, "img.png"))
-        
+
 def setup(bot):
     bot.add_cog(Utilities(bot))
