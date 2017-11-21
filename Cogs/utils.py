@@ -15,7 +15,7 @@ class Utilities:
         self.bot = bot
 
     @commands.command(hidden=True)
-    async def setavatar(self, ctx, picture=None):
+    async def setavatar(self, ctx):
         pics = os.listdir("Bot Pics")
         fmt = "Enter pic number to set:\n"
         for pic, i in enumerate(pics):
