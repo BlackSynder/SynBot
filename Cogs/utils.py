@@ -96,6 +96,7 @@ class Utilities:
 
     @commands.command()
     async def img64(self, ctx, *, b64: ByteString):
+        """Converts base64 to an image"""
         f = BytesIO(base64.decodebytes(b64))
         await ctx.send(file=discord.File(f, "img.png"))
 
