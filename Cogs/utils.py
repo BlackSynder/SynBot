@@ -27,7 +27,7 @@ class Utilities:
         except asyncio.TimeoutError:
             await img_msg.delete()
             return await ctx.send("Timeout. Please try again later.")
-        img_num = int(msg)-1
+        img_num = int(msg.content)-1
         if img_num > len(pics):
             await img_msg.delete()
             return await ctx.send("This image doesnt exist!")
