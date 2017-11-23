@@ -1,5 +1,3 @@
-import discord
-
 class NameNotifier:
     def __init__(self, bot):
         self.bot = bot
@@ -10,5 +8,7 @@ class NameNotifier:
         if message.channel.id == 258330960733405184:
             await message.delete()
             await message.channel.send(embed=message.embeds[0])
+
+
 def setup(bot):
     bot.add_cog(NameNotifier(bot))

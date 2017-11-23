@@ -1,8 +1,7 @@
 from Cogs.paginator import Pages
 
 from discord.ext import commands
-import discord
-import os
+
 
 class Roles:
     def __init__(self, bot):
@@ -18,6 +17,7 @@ class Roles:
             await p.paginate()
         except Exception as e:
             await ctx.send(e)
+
 
 def setup(bot):
     bot.add_cog(Roles(bot))

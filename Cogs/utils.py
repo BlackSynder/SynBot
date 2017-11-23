@@ -37,7 +37,6 @@ class Utilities:
             await ctx.bot.user.edit(avatar=f.read())
         await ctx.send("Changed image to " + img_name)
 
-
     @commands.command(hidden=True, aliases=["eval", "evaluate"])
     @commands.is_owner()
     async def debug(self, ctx, *, code: str):
@@ -113,6 +112,7 @@ class Utilities:
         """Converts base64 to an image"""
         f = BytesIO(base64.decodebytes(b64))
         await ctx.send(file=discord.File(f, "img.png"))
+
 
 def setup(bot):
     bot.add_cog(Utilities(bot))
