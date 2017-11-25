@@ -4,7 +4,6 @@ from discord.ext import commands
 from discord.ext.commands import Bot
 
 
-
 TOKEN = os.environ.get("BOT_TOKEN")
 extensions = ["roll", "roles", "utils", "search", "cancer"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
@@ -30,5 +29,6 @@ class SynBot(Bot):
                 exc = '{}: {}'.format(type(e).__name__, e)
                 print('Failed to load extension {}\n{}'.format(extension, exc))
         print('------')
+
 
 SynBot().run(TOKEN)
