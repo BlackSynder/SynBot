@@ -1,5 +1,7 @@
 import os
+
 import discord
+import tokage
 from discord.ext import commands
 from discord.ext.commands import Bot
 
@@ -15,7 +17,13 @@ class SynBot(Bot):
         prefix = commands.when_mentioned_or("syn ", "s!")
         super().__init__(command_prefix=prefix, description="Misc Bot", game=game)
 
+    async def close(self):
+        await self.t_client.cleanup()
+        await super().close()
+
     async def on_ready(self):
+        self.t_client = tokage.Client()
+
         print('Logged in!')
         print(self.user.name)
         print(self.user.id)
