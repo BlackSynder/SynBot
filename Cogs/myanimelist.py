@@ -1,7 +1,8 @@
-from discord.ext import commands
-import discord
-import pytz
 from datetime import datetime, timedelta
+
+import pytz
+import discord
+from discord.ext import commands
 
 MAL_ICON = 'https://myanimelist.cdn-dena.com/img/sp/icon/apple-touch-icon-256.png'
 

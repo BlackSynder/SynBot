@@ -27,7 +27,7 @@ class Utilities:
         except asyncio.TimeoutError:
             await img_msg.delete()
             return await ctx.send("Timeout. Please try again later.")
-        img_num = int(msg.content)-1
+        img_num = int(msg.content) - 1
         if img_num > len(pics):
             await img_msg.delete()
             return await ctx.send("This image doesnt exist!")
@@ -54,7 +54,7 @@ class Utilities:
             'channel': ctx.channel,
             'author': ctx.author,
             'history': await ctx.channel.history().flatten(),
-            't_client': tokage.Client()
+            't_client': self.bot.t_client
         }
 
         env.update(globals())
@@ -85,16 +85,18 @@ class Utilities:
             'channel': ctx.channel,
             'author': ctx.author,
             'history': await ctx.channel.history().flatten(),
-            't_client': tokage.Client()
+            't_client': self.bot.t_client
         }
         env.update(globals())
         wrapped = 'async def func():\n%s' % textwrap.indent(code, '  ')
         try:
             result = exec(wrapped, env)
             func = env['func']
-            await func()
+            ret = await func()
             if result:
                 await ctx.send(f"```{result}```")
+            elif ret:
+                await ctx.send(f"```{ret}```")
         except Exception as e:
             await ctx.send(f"```{type(e).__name__ + ': ' + str(e)}```")
 
