@@ -7,7 +7,7 @@ from discord.ext.commands import Bot
 
 
 TOKEN = os.environ.get("BOT_TOKEN")
-extensions = ["roll", "roles", "utils", "search", "cancer"]
+extensions = ["roll", "roles", "utils", "search", "cancer", "myanimelist"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
 
 
