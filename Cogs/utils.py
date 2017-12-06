@@ -1,11 +1,11 @@
-import os
 import asyncio
-import inspect
-import textwrap
 import base64
+import inspect
+import os
+import textwrap
+import time
 from io import BytesIO
 
-import tokage
 import discord
 from discord.ext import commands
 
@@ -14,6 +14,14 @@ class Utilities:
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command()
+    async def ping(self, ctx):
+        before = time.monotonic()
+        msg = await ctx.send("Pinging... \N{TABLE TENNIS PADDLE AND BALL}")
+        after = time.monotonic()
+        ping = round((after - before) * 1000, 2)
+        await msg.edit(content=f"\N{TABLE TENNIS PADDLE AND BALL} Pong! **{ping}**ms")
+
     @commands.command(hidden=True)
     async def setavatar(self, ctx):
         pics = os.listdir("Bot Pics")
@@ -21,7 +29,7 @@ class Utilities:
         for i, pic in enumerate(pics):
             fmt += f"[{i+1}] - {pic}\n"
         img_msg = await ctx.send(fmt)
-        check = lambda m: m.author == ctx.author and m.channel == ctx.channel
+        check = lambda m: m.author == ctx.author and m.channel == ctx.channel # noqa
         try:
             msg = await self.bot.wait_for("message", check=check, timeout=35)
         except asyncio.TimeoutError:
