@@ -16,13 +16,14 @@ class Utilities:
 
     @commands.command()
     async def ping(self, ctx):
+        """Displays latency"""
         before = time.monotonic()
         msg = await ctx.send("Pinging... \N{TABLE TENNIS PADDLE AND BALL}")
         after = time.monotonic()
         ping = round((after - before) * 1000, 2)
         await msg.edit(content=f"\N{TABLE TENNIS PADDLE AND BALL} Pong! **{ping}**ms")
 
-    @commands.command(hidden=True)
+    @commands.command(hidden=True, disabled=True)
     async def setavatar(self, ctx):
         pics = os.listdir("Bot Pics")
         fmt = "Enter pic number to set:\n"
