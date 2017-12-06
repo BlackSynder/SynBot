@@ -1,12 +1,15 @@
-from discord.ext import commands
-import discord
-import aiohttp
 from urllib.parse import parse_qs
+
+import aiohttp
+import discord
+from discord.ext import commands
 from lxml import etree
+
 
 class Google:
     def __init__(self, bot):
         self.bot = bot
+
     def parse_google_card(self, node):
         if node is None:
             return None
@@ -43,7 +46,7 @@ class Google:
                 e.description = ''.join(release[0].itertext()).strip()
                 e.title = ''.join(release[1].itertext()).strip()
                 return e
-            except:
+            except:  # noqa
                 return None
 
         # check for translation card
@@ -58,8 +61,8 @@ class Google:
         words = parent.find(".//ol/div[@class='g']/div/h3[@class='r']/div")
         if words is not None:
             try:
-                definition_info = words.getparent().getparent()[1] # yikes
-            except:
+                definition_info = words.getparent().getparent()[1]  # yikes
+            except:  # noqa
                 pass
             else:
                 try:
@@ -67,7 +70,7 @@ class Google:
                     # the first is the actual word, the second is the pronunciation
                     e.title = words[0].text
                     e.description = words[1].text
-                except:
+                except:  # noqa
                     return None
 
                 # inside the table there's the actual definitions
@@ -88,7 +91,7 @@ class Google:
                             body.append('%s. %s' % (index, definition.text))
 
                         e.add_field(name=lexical_category, value='\n'.join(body), inline=False)
-                    except:
+                    except:  # noqa
                         continue
 
                 return e
@@ -100,7 +103,7 @@ class Google:
                 time_place = ''.join(time_in.find("span[@class='_HOb _Qeb']").itertext()).strip()
                 the_time = ''.join(time_in.find("div[@class='_rkc _Peb']").itertext()).strip()
                 the_date = ''.join(time_in.find("div[@class='_HOb _Qeb']").itertext()).strip()
-            except:
+            except:  # noqa
                 return None
             else:
                 e.title = time_place
@@ -135,8 +138,8 @@ class Google:
             category = img.get('alt')
             image = 'https:' + img.get('src')
             temperature = tr[1].xpath("./span[@class='wob_t']//text()")[0]
-        except:
-            return None # RIP
+        except:  # noqa
+            return None  # RIP
         else:
             e.set_thumbnail(url=image)
             e.description = '*%s*' % category
@@ -145,7 +148,7 @@ class Google:
         # On the 4th column it tells us our wind speeds
         try:
             wind = ''.join(table[3].itertext()).replace('Wind: ', '')
-        except:
+        except:  # noqa
             return None
         else:
             e.add_field(name='Wind', value=wind)
@@ -153,14 +156,12 @@ class Google:
         # On the 5th column it tells us our humidity
         try:
             humidity = ''.join(table[4][0].itertext()).replace('Humidity: ', '')
-        except:
+        except:  # noqa
             return None
         else:
             e.add_field(name='Humidity', value=humidity)
 
         return e
-
-
 
     async def get_google_entries(self, query):
         params = {
@@ -214,7 +215,7 @@ class Google:
                     if not url.startswith('/url?'):
                         continue
 
-                    url = parse_qs(url[5:])['q'][0] # get the URL from ?q query string
+                    url = parse_qs(url[5:])['q'][0]  # get the URL from ?q query string
 
                     # if I ever cared about the description, this is how
                     entries.append(url)
@@ -246,8 +247,10 @@ class Google:
             if len(entries) == 0:
                 return await ctx.send('No results found... sorry.')
 
+            icon = "https://cdn.discordapp.com/attachments/246291440106340352/293036111373139969/google_logo1600.png"
             emb = discord.Embed(colour=0x77EE00, timestamp=ctx.message.created_at)
-            emb.set_author(name="Google Search", url="https://www.google.com/search?q="+query.replace(" ", "+"), icon_url="https://cdn.discordapp.com/attachments/246291440106340352/293036111373139969/google_logo1600.png")
+            emb.set_author(name="Google Search", url="https://www.google.com/search?q=" + query.replace(" ", "+"),
+                           icon_url=icon)
             next_two = entries[1:3]
             first_entry = entries[0]
             if first_entry[-1] == ')':
@@ -261,5 +264,7 @@ class Google:
                 emb.add_field(name="Search Result", value=first_entry)
 
             await ctx.send(embed=emb)
+
+
 def setup(bot):
     bot.add_cog(Google(bot))

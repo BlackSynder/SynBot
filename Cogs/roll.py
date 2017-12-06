@@ -1,7 +1,8 @@
-from discord.ext import commands
-import discord
 import random
 import re
+
+import discord
+from discord.ext import commands
 
 
 class DiceRoll:
@@ -10,7 +11,9 @@ class DiceRoll:
 
     @commands.command(aliases=["rng", "r"])
     async def roll(self, ctx, rng):
-        """Roll a dice.\nSupports Addition(+), Subtraction(-), Multiplication(*, x), Division(/).\nExample: s!roll 4d20+5"""
+        """Roll a dice
+        Supports Addition(+), Subtraction(-), Multiplication(*, x), Division(/).
+        Example: s!roll 4d20+5"""
         pattern = r"((\d+)d(\d+))([+\-*\/x]\d+)?"
         match = re.search(pattern, rng)
         if match:
@@ -72,7 +75,7 @@ class DiceRoll:
                 roll_list.remove(min(roll_list))
                 final_list.append(sum(roll_list))
             total = sum(final_list)
-        await ctx.send("Your stats are:\n{stats}\nTotal roll score: {total}".format(stats=str([x for x in final_list]), total=total))
+        await ctx.send("Your stats are:\n{0}\nTotal roll score: {1}".format(str([x for x in final_list]), total))
 
 
 def setup(bot):

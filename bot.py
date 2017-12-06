@@ -3,15 +3,13 @@ import os
 import discord
 import tokage
 from discord.ext import commands
-from discord.ext.commands import Bot
-
 
 TOKEN = os.environ.get("BOT_TOKEN")
 extensions = ["roll", "roles", "utils", "search", "cancer", "myanimelist"]
 startup_extensions = ["Cogs." + extension for extension in extensions]
 
 
-class SynBot(Bot):
+class SynBot(commands.Bot):
     def __init__(self):
         game = discord.Game(name="s!help | syn help", type=2)
         prefix = commands.when_mentioned_or("syn ", "s!")

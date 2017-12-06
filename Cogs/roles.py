@@ -1,6 +1,6 @@
-from Cogs.paginator import Pages
-
 from discord.ext import commands
+
+from Cogs.paginator import Pages
 
 
 class Roles:
