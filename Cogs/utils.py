@@ -135,7 +135,7 @@ class Utilities:
         async with ctx.typing():
             self.bot.loop.run_in_executor(None, self.square_color, hexa)
             await asyncio.sleep(1)
-        embed = discord.embed(title=f"Color for hex `#{hexa.upper()}`:") \
+        embed = discord.Embed(title=f"Color for hex `#{hexa.upper()}`:") \
             .set_image(url="attachment://color.png")
         await ctx.send(file=discord.File('color.png'), embed=embed)
 
