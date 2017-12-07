@@ -8,6 +8,7 @@ from io import BytesIO
 
 import discord
 from discord.ext import commands
+from PIL import Image
 
 
 class Utilities:
@@ -123,6 +124,20 @@ class Utilities:
         """Converts base64 to an image"""
         f = BytesIO(base64.decodebytes(b64))
         await ctx.send(file=discord.File(f, "img.png"))
+
+    def square_color(self, hexa):
+        with Image.new("RGBA", (200, 200), f"#{hexa}") as img:
+            img.save('color.png')
+
+    @commands.command()
+    async def color(self, ctx, hexa):
+        """Post a pic of a given hex value."""
+        async with ctx.typing():
+            self.bot.loop.run_in_executor(None, self.square_color, hexa)
+            await asyncio.sleep(1)
+        embed = discord.embed(title=f"Color for hex `#{hexa.upper()}`:") \
+            .set_image(url="attachment://color.png")
+        await ctx.send(file=discord.File('color.png'), embed=embed)
 
 
 def setup(bot):
