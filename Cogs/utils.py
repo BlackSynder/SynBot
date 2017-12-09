@@ -7,6 +7,7 @@ import time
 from io import BytesIO
 
 import discord
+import psutil
 from discord.ext import commands
 from PIL import Image
 
@@ -138,6 +139,24 @@ class Utilities:
         embed = discord.Embed(title=f"Color for hex `#{hexa.upper()}`:") \
             .set_image(url="attachment://color.png")
         await ctx.send(file=discord.File('color.png'), embed=embed)
+
+    @commands.command()
+    async def about(self, ctx):
+        """Shows bot information"""
+        owner = self.bot.get_user(self.bot.owner_id)
+        total = len(list(self.bot.get_all_members()))
+        unique = len(self.bot.users)
+        online = len({m.id for m in self.bot.get_all_members() if m.status is discord.Status.online})
+        process = psutil.Process()
+        memory = process.memory_full_info().uss / 1024**2
+        cpu = process.cpu_percent() / psutil.cpu_count()
+        embed = (discord.Embed(title=f"Bot Statistics", color=discord.Color.blurple())
+                 .add_field(name="Members",
+                            value=f"{total} total\n{unique} unique\n{online} online")
+                 .add_field(name="Servers", value=len(self.bot.guilds))
+                 .add_field(name="Hardware", value=f"CPU - {cpu}\nRAM - {memory}")
+                 .set_author(name=str(owner), icon_url=owner.avatar_url))
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
