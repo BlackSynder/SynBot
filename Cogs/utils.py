@@ -154,7 +154,7 @@ class Utilities:
                  .add_field(name="Members",
                             value=f"{total} total\n{unique} unique\n{online} online")
                  .add_field(name="Servers", value=len(self.bot.guilds))
-                 .add_field(name="Hardware", value=f"CPU - {cpu}\nRAM - {memory}")
+                 .add_field(name="Hardware", value=f"CPU - {cpu:.2f}%\nRAM - {memory:.2f}MB")
                  .set_author(name=str(owner), icon_url=owner.avatar_url))
         await ctx.send(embed=embed)
 
