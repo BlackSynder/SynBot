@@ -46,9 +46,9 @@ class MyAnimeList:
         if remaining.days < 0:
             return f'{6} Days {remaining.seconds // 3600} Hours and {(remaining.seconds // 60)%60} Minutes.'
         else:
-            return f'{remaining.days} Days \
-                    {remaining.seconds // 3600} Hours \
-                    and {(remaining.seconds // 60)%60} Minutes.'
+            return (f'{remaining.days} Days '
+                    f'{remaining.seconds // 3600} Hours '
+                    f'and {(remaining.seconds // 60)%60} Minutes.')
 
     @mal.command(name="next")
     async def next_(self, ctx, *, query):
