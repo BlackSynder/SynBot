@@ -8,6 +8,12 @@ class Cancer:
             return
         await member.guild.system_channel.send("yes " + member.mention)
 
+    async def on_member_remove(self, member):
+        if member.guild.id not in self.ok_list:
+            return
+        await member.guild.system_channel.send("no " + member.mention)
+
+
     async def on_guild_emojis_update(self, guild, before, after):
         if guild.id not in self.ok_list:
             return
