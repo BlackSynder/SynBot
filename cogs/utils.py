@@ -2,14 +2,16 @@ import asyncio
 import base64
 import inspect
 import os
+import random
 import textwrap
 import time
 from io import BytesIO
 
-import discord
 import psutil
-from discord.ext import commands
 from PIL import Image
+
+import discord
+from discord.ext import commands
 
 
 class Utilities:
@@ -157,6 +159,14 @@ class Utilities:
                  .add_field(name="Hardware", value=f"CPU - {cpu:.2f}%\nRAM - {memory:.2f}MB")
                  .set_author(name=str(owner), icon_url=owner.avatar_url))
         await ctx.send(embed=embed)
+
+    @commands.command(aliases=['c', 'pick'])
+    async def choose(self, ctx, *, options):
+        """Chooses out of options.
+        Syntax: s!choose option 1 | option 2 | option 3
+        """
+        options = options.split("|") if "|" in options else options.split()
+        await ctx.send(random.choice(options))
 
 
 def setup(bot):
