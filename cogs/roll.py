@@ -20,7 +20,7 @@ class DiceRoll:
             rolls = []
             dice_amount = int(match.group(2))
             if dice_amount > 200:
-                await ctx.send(":exclamation: Thats WAAAAAAY too many dice!", delete_after=10)
+                return await ctx.send(":exclamation: Thats WAAAAAAY too many dice!")
             dice_type = int(match.group(3))
             try:
                 # +N or -N
