@@ -18,7 +18,12 @@ class SynBot(commands.Bot):
     async def close(self):
         await self.t_client.cleanup()
         await super().close()
-
+        
+    async def on_message(self, message):
+        if message.author.bot:
+            return
+        await self.process_commands(message)
+        
     async def on_ready(self):
         self.t_client = tokage.Client()
 
