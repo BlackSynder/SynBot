@@ -69,13 +69,9 @@ class Utilities:
         fmt += "\n".join(["    " + ln for ln in code.split("\n")])
         out = StringIO()
 
-        old_print = print
-
-        def new_print(*args, **kwargs):
+        def print(*args, **kwargs):
             f = kwargs.pop('file', False) or out
-            old_print(*args, **kwargs, file=f)
-
-        print = new_print  # noqa
+            __builtins__.print(*args, **kwargs, file=f)
 
         try:
             result = eval(code, env)
