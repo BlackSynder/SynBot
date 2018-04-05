@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import builtins
 import inspect
 import os
 import random
@@ -52,13 +53,6 @@ class Utilities:
     @commands.command(hidden=True)
     @commands.is_owner()
     async def eval(self, ctx, *, code):
-
-        out = StringIO()
-
-        def print(*args, **kwargs):
-            f = kwargs.pop('file', False) or out
-            __builtins__.print(*args, **kwargs, file=f)
-
         env = {
             "ctx": ctx,
             "message": ctx.message,
@@ -66,7 +60,6 @@ class Utilities:
             "guild": ctx.guild,
             "author": ctx.author,
             "bot": ctx.bot,
-            "print": print,
             "history": await ctx.channel.history().flatten()
         }
         env.update(globals())
@@ -75,6 +68,11 @@ class Utilities:
         code = code.lstrip("py\n")
         fmt = "async def e():\n"
         fmt += "\n".join(["    " + ln for ln in code.split("\n")])
+        out = StringIO()
+
+        def print(*args, **kwargs):
+            f = kwargs.pop('file', False) or out
+            builtins.print(*args, **kwargs, file=f)
 
         try:
             result = eval(code, env)
