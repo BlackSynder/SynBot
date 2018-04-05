@@ -3,15 +3,14 @@ import base64
 import inspect
 import os
 import random
-import textwrap
 import time
-from io import BytesIO
-
-import psutil
-from PIL import Image
+from io import BytesIO, StringIO
+from traceback import format_exception
 
 import discord
+import psutil
 from discord.ext import commands
+from PIL import Image
 
 
 class Utilities:
@@ -50,68 +49,46 @@ class Utilities:
             await ctx.bot.user.edit(avatar=f.read())
         await ctx.send("Changed image to " + img_name)
 
-    @commands.command(hidden=True, aliases=["eval", "evaluate"])
+    @commands.command(hidden=True)
     @commands.is_owner()
-    async def debug(self, ctx, *, code: str):
-        """Evaluates code."""
-        code = code.strip('`')
-        python = '```py\n{}\n```'
-        result = None
-
+    async def eval(self, ctx, *, code):
         env = {
-            'bot': self.bot,
-            'ctx': ctx,
-            'message': ctx.message,
-            'server': ctx.guild,
-            'guild': ctx.guild,
-            'channel': ctx.channel,
-            'author': ctx.author,
-            'history': await ctx.channel.history().flatten(),
-            't_client': self.bot.t_client
+            "ctx": ctx,
+            "message": ctx.message,
+            "channel": ctx.channel,
+            "guild": ctx.guild,
+            "author": ctx.author,
+            "bot": ctx.bot,
+            "history": await ctx.channel.history().flatten()
         }
-
         env.update(globals())
+
+        code = code.strip("`")
+        code = code.lstrip("py\n")
+        fmt = "async def e():\n"
+        fmt += "\n".join(["    " + ln for ln in code.split("\n")])
+        out = StringIO()
+
+        old_print = print
+
+        def print(*args, **kwargs):
+            f = kwargs.pop('file', False) or out
+            old_print(*args, **kwargs, file=f)
 
         try:
             result = eval(code, env)
             if inspect.isawaitable(result):
                 result = await result
-        except Exception as e:
-            await ctx.send(python.format(type(e).__name__ + ': ' + str(e)))
-            return
-
-        await ctx.send(python.format(result))
-
-    @commands.command(name="exec", hidden=True)
-    @commands.is_owner()
-    async def execute(self, ctx, *, code):
-        if code.startswith("```") and code.endswith("```"):
-            code = code.strip("```")
-            if code.startswith("py\n"):
-                code = code[3:]
-        env = {
-            'bot': self.bot,
-            'ctx': ctx,
-            'message': ctx.message,
-            'server': ctx.guild,
-            'guild': ctx.guild,
-            'channel': ctx.channel,
-            'author': ctx.author,
-            'history': await ctx.channel.history().flatten(),
-            't_client': self.bot.t_client
-        }
-        env.update(globals())
-        wrapped = 'async def func():\n%s' % textwrap.indent(code, '  ')
-        try:
-            result = exec(wrapped, env)
-            func = env['func']
-            ret = await func()
-            if result:
-                await ctx.send(f"```{result}```")
-            elif ret:
-                await ctx.send(f"```{ret}```")
-        except Exception as e:
-            await ctx.send(f"```{type(e).__name__ + ': ' + str(e)}```")
+            return await ctx.send(f"```py\n{result}```")
+        except:  # noqa
+            try:
+                exec(fmt, env)
+                result = await env["e"]()
+            except Exception as e:
+                result = ''.join(format_exception(None, e, e.__traceback__, chain=False))
+        stdout = out.read()
+        if stdout is not "" or result is not None:
+            await ctx.send(f"```py\n{out.read()}\n{result}```")
 
     @commands.command(aliased=["join", "inv"])
     async def invite(self, ctx):
