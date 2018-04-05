@@ -71,9 +71,11 @@ class Utilities:
 
         old_print = print
 
-        def print(*args, **kwargs):
+        def new_print(*args, **kwargs):
             f = kwargs.pop('file', False) or out
             old_print(*args, **kwargs, file=f)
+
+        print = new_print  # noqa
 
         try:
             result = eval(code, env)
