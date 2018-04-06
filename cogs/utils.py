@@ -79,9 +79,9 @@ class Utilities:
 
         try:
             result = eval(code, env)
+            stdout = out.getvalue()
             if inspect.isawaitable(result):
                 result = await result
-                stdout = out.getvalue()
             return await ctx.send(f"```py\n{stdout}\n{result}```")
         except:  # noqa
             try:
