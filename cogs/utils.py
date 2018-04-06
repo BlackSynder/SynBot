@@ -81,7 +81,8 @@ class Utilities:
             result = eval(code, env)
             if inspect.isawaitable(result):
                 result = await result
-            return await ctx.send(f"```py\n{result}```")
+                stdout = out.getvalue()
+            return await ctx.send(f"```py\n{stdout}\n{result}```")
         except:  # noqa
             try:
                 exec(fmt, env)
