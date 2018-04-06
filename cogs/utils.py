@@ -68,7 +68,7 @@ class Utilities:
             "author": ctx.author,
             "bot": ctx.bot,
             "print": print,
-            "history": await ctx.channel.history().flatten()
+            "history": await ctx.history().flatten()
         }
         env.update(globals())
 
