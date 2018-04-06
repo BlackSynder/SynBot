@@ -88,9 +88,9 @@ class Utilities:
                 result = await env["e"]()
             except Exception as e:
                 result = ''.join(format_exception(None, e, e.__traceback__, chain=False))
-        stdout = out.read()
+        stdout = out.getvalue()
         if stdout is not "" or result is not None:
-            await ctx.send(f"```py\n{out.read()}\n{result}```")
+            await ctx.send(f"```py\n{stdout}\n{result}```")
 
     @commands.command(aliased=["join", "inv"])
     async def invite(self, ctx):
