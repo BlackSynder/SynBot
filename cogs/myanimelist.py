@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 import discord
 import pytz
+from tokage import TokageNotFound
 from discord.ext import commands
 
 MAL_ICON = 'https://myanimelist.cdn-dena.com/img/sp/icon/apple-touch-icon-256.png'
@@ -57,8 +58,10 @@ class MyAnimeList:
             try:
                 anime_id = await self.t_client.search_id("anime", query)
                 anime = await self.t_client.get_anime(anime_id)
+            except TokageNotFound:
+                return await ctx.send(":exclamation: Anime was not found!")
             except Exception as e:
-                return await ctx.send(f":exclamation: Anime was not found!")
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
         if anime.status == "Finished Airing":
             remaining = f"This anime has finished airing!\n{anime.air_end}"
         else:
@@ -77,8 +80,10 @@ class MyAnimeList:
             try:
                 manga_id = await self.t_client.search_id("manga", query)
                 result = await self.t_client.get_manga(manga_id)
-            except Exception as e:
+            except TokageNotFound:
                 return await ctx.send(":exclamation: Manga was not found!")
+            except Exception as e:
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
         if len(result.synopsis) > 1024:
             result.synopsis = result.synopsis[:1024 - (len(result.link) + 7)] + f"[...]({result.link})"
         em = discord.Embed(title=result.title, colour=0xFF9933)
@@ -103,8 +108,10 @@ class MyAnimeList:
             try:
                 anime_id = await self.t_client.search_id("anime", query)
                 result = await self.t_client.get_anime(anime_id)
-            except Exception as e:
+            except TokageNotFound:
                 return await ctx.send(":exclamation: Anime was not found!")
+            except Exception as e:
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
         if len(result.synopsis) > 1024:
             result.synopsis = result.synopsis[:1024 - (len(result.link) + 7)] + f"[...]({result.link})"
         em = discord.Embed(title=result.title, colour=0x0066CC)
@@ -128,8 +135,10 @@ class MyAnimeList:
             try:
                 char_id = await self.t_client.search_id("character", query)
                 character = await self.t_client.get_character(char_id)
-            except Exception as e:
+            except TokageNotFound:
                 return await ctx.send(":exclamation: Character was not found!")
+            except Exception as e:
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
         medium = character.animeography if character.animeography else character.mangaography
         jap_va = [va for va in character.voice_actors if va["language"] == "Japanese"][0]
         em = discord.Embed(title="MyAnimeList", colour=0x0066CC)
