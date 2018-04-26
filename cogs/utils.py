@@ -191,6 +191,10 @@ class Utilities:
             msg = msg[:2000]
         await ctx.send(msg)
 
+    @scramble.error()
+    async def handle_cooldown(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send("Command is on cooldown!")
 
 def setup(bot):
     bot.add_cog(Utilities(bot))
