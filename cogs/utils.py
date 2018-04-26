@@ -181,7 +181,7 @@ class Utilities:
         (or the current one if none was given).
         """
         channel = channel or ctx.channel
-        if channel.is_nsfw and not ctx.channel.is_nsfw:
+        if channel.is_nsfw() and not ctx.channel.is_nsfw():
             return await ctx.send("Cannot post nsfw content in non-nsfw channels.")
         async with ctx.typing():
             msgs = [m.clean_content async for m in channel.history(limit=1000)]
