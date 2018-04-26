@@ -11,6 +11,7 @@ from traceback import format_exception
 import discord
 import psutil
 from discord.ext import commands
+from discord.ext.commands import cooldown, BucketType
 from PIL import Image
 
 
@@ -148,6 +149,45 @@ class Utilities:
         options = options.split("|") if "|" in options else options.split()
         await ctx.send(random.choice(options))
 
+    def generate_message(self, messages):
+        words = messages.split(' ')
+        index = 1
+        chain = {}
+        for word in words[index:]:
+            key = words[index - 1]
+            if key in chain:
+                chain[key].append(word)
+            else:
+                chain[key] = [word]
+            index += 1
+
+        word1 = random.choice(list(chain.keys()))
+        message = word1.capitalize()
+        count = 45
+        while len(message.split(' ')) < count:
+            word2 = random.choice(chain[word1])
+            word1 = word2
+            message += ' ' + word2
+
+        if not message.endswith('.'):
+            message += "."
+
+        return message
+
+    @commands.command(aliases=["makechain", "channelchain", "makemessage"])
+    @cooldown(1, 120, BucketType.channel)
+    async def scramble(self, ctx, channel: discord.TextChannel = None):
+        """Generates a message based on the last 1000 messages in a specified channel
+        (or the current one if none was given).
+        """
+        channel = channel or ctx.channel
+        async with ctx.typing():
+            msgs = [m.clean_content async for m in channel.history(limit=1000)]
+            msg = await self.bot.loop.run_in_executor(None, self.generate_message, " ".join(msgs))
+        if len(msg) >= 2000:
+            await ctx.send("Result was too large! Posting a part of it.")
+            msg = msg[:2000]
+        await ctx.send(msg)
 
 def setup(bot):
     bot.add_cog(Utilities(bot))
