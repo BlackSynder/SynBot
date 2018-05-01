@@ -191,7 +191,7 @@ class Utilities:
             msg = msg[:2000]
         await ctx.send(msg)
 
-    @scramble.error()
+    @scramble.error
     async def handle_cooldown(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send("Command is on cooldown!")
