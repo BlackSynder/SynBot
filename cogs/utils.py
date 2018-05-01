@@ -196,5 +196,6 @@ class Utilities:
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send("Command is on cooldown!")
 
+
 def setup(bot):
     bot.add_cog(Utilities(bot))
