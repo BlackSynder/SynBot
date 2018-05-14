@@ -56,10 +56,12 @@ class MyAnimeList:
         """Countdown to next episode of an airing anime."""
         async with ctx.typing():
             try:
-                # anime_id = await self.t_client.search_id("anime", query)  # Google blacklisted us RIP
-                # anime = await self.t_client.get_anime(anime_id)
-                partial = (await self.t_client.search_anime(query))[0]
-                anime = await partial.request_full()
+                try:
+                    anime_id = await self.t_client.search_id("anime", query)
+                    anime = await self.t_client.get_anime(anime_id)
+                except RuntimeError:
+                    partial = (await self.t_client.search_anime(query))[0]
+                    anime = await partial.request_full()
             except TokageNotFound:
                 return await ctx.send(":exclamation: Anime was not found!")
             except Exception as e:
@@ -80,10 +82,12 @@ class MyAnimeList:
         """Searches MAL for a Manga."""
         async with ctx.typing():
             try:
-                # manga_id = await self.t_client.search_id("manga", query)  # Google blacklisted us RIP
-                # result = await self.t_client.get_manga(manga_id)
-                partial = (await self.t_client.search_manga(query))[0]
-                result = await partial.request_full()
+                try:
+                    manga_id = await self.t_client.search_id("manga", query)  # Google blacklisted us RIP
+                    result = await self.t_client.get_manga(manga_id)
+                except RuntimeError:
+                    partial = (await self.t_client.search_manga(query))[0]
+                    result = await partial.request_full()
             except TokageNotFound:
                 return await ctx.send(":exclamation: Manga was not found!")
             except Exception as e:
@@ -110,10 +114,12 @@ class MyAnimeList:
         """Searches MAL for an Anime."""
         async with ctx.typing():
             try:
-                # anime_id = await self.t_client.search_id("anime", query)  # Google blacklisted us RIP
-                # result = await self.t_client.get_anime(anime_id)
-                partial = (await self.t_client.search_anime(query))[0]
-                result = await partial.request_full()
+                try:
+                    anime_id = await self.t_client.search_id("anime", query)  # Google blacklisted us RIP
+                    result = await self.t_client.get_anime(anime_id)
+                except RuntimeError:
+                    partial = (await self.t_client.search_anime(query))[0]
+                    result = await partial.request_full()
             except TokageNotFound:
                 return await ctx.send(":exclamation: Anime was not found!")
             except Exception as e:
@@ -139,10 +145,12 @@ class MyAnimeList:
         """Searches MAL for a Character."""
         async with ctx.typing():
             try:
-                # char_id = await self.t_client.search_id("character", query)  # Google blacklisted us RIP
-                # character = await self.t_client.get_character(char_id)
-                partial = (await self.t_client.search_character(query))[0]
-                character = await partial.request_full()
+                try:
+                    char_id = await self.t_client.search_id("character", query)  # Google blacklisted us RIP
+                    character = await self.t_client.get_character(char_id)
+                except RuntimeError:
+                    partial = (await self.t_client.search_character(query))[0]
+                    character = await partial.request_full()
             except TokageNotFound:
                 return await ctx.send(":exclamation: Character was not found!")
             except Exception as e:
