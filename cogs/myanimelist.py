@@ -83,7 +83,7 @@ class MyAnimeList:
         async with ctx.typing():
             try:
                 try:
-                    manga_id = await self.t_client.search_id("manga", query)  # Google blacklisted us RIP
+                    manga_id = await self.t_client.search_id("manga", query)
                     result = await self.t_client.get_manga(manga_id)
                 except RuntimeError:
                     partial = (await self.t_client.search_manga(query))[0]
@@ -115,7 +115,7 @@ class MyAnimeList:
         async with ctx.typing():
             try:
                 try:
-                    anime_id = await self.t_client.search_id("anime", query)  # Google blacklisted us RIP
+                    anime_id = await self.t_client.search_id("anime", query)
                     result = await self.t_client.get_anime(anime_id)
                 except RuntimeError:
                     partial = (await self.t_client.search_anime(query))[0]
@@ -146,7 +146,7 @@ class MyAnimeList:
         async with ctx.typing():
             try:
                 try:
-                    char_id = await self.t_client.search_id("character", query)  # Google blacklisted us RIP
+                    char_id = await self.t_client.search_id("character", query)
                     character = await self.t_client.get_character(char_id)
                 except RuntimeError:
                     partial = (await self.t_client.search_character(query))[0]
