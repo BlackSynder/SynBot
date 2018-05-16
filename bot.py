@@ -13,17 +13,17 @@ class SynBot(commands.Bot):
     def __init__(self):
         game = discord.Game(name="s!help | syn help", type=2)
         prefix = commands.when_mentioned_or("syn ", "s!")
-        super().__init__(command_prefix=prefix, description="Misc Bot", game=game)
+        super().__init__(command_prefix=prefix, description="Misc Bot", activity=game)
 
     async def close(self):
         await self.t_client.cleanup()
         await super().close()
-        
+
     async def on_message(self, message):
         if message.author.bot:
             return
         await self.process_commands(message)
-        
+
     async def on_ready(self):
         self.t_client = tokage.Client()
 
