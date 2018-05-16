@@ -175,7 +175,6 @@ class Utilities:
         return message
 
     @commands.command(aliases=["makechain", "channelchain", "makemessage"])
-    @cooldown(1, 120, BucketType.channel)
     async def scramble(self, ctx, channel: discord.TextChannel = None):
         """Generates a message based on the last 1000 messages in a specified channel
         (or the current one if none was given).
@@ -190,11 +189,6 @@ class Utilities:
             await ctx.send("Result was too large! Posting a part of it.")
             msg = msg[:2000]
         await ctx.send(msg)
-
-    @scramble.error
-    async def handle_cooldown(self, ctx, error):
-        if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send("Command is on cooldown!")
 
 
 def setup(bot):
