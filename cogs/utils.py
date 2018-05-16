@@ -182,7 +182,7 @@ class Utilities:
         if channel.is_nsfw() and not ctx.channel.is_nsfw():
             return await ctx.send("Cannot post nsfw content in non-nsfw channels.")
         async with ctx.typing():
-            msgs = [m.clean_content async for m in channel.history(limit=1000)]
+            msgs = [m.clean_content async for m in channel.history(limit=1000) if not m.author.bot]
             msg = await self.bot.loop.run_in_executor(None, self.generate_message, " ".join(msgs))
         if len(msg) >= 2000:
             await ctx.send("Result was too large! Posting a part of it.")
