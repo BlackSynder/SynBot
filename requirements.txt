@@ -6,3 +6,4 @@ git+https://github.com/BlackSynder/Tokage.git
 pytz
 pillow
 psutil
+kadal

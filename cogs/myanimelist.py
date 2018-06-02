@@ -2,15 +2,19 @@ from datetime import datetime, timedelta
 
 import discord
 import pytz
+import kadal
+from kadal import MediaNotFound
 from tokage import TokageNotFound
 from discord.ext import commands
 
 MAL_ICON = 'https://myanimelist.cdn-dena.com/img/sp/icon/apple-touch-icon-256.png'
+AL_ICON = 'https://avatars2.githubusercontent.com/u/18018524?s=280&v=4'
 
 
 class MyAnimeList:
     def __init__(self, bot):
         self.bot = bot
+        self.klient = kadal.Client()
         self.t_client = bot.t_client
 
     @commands.group()
@@ -167,6 +171,66 @@ class MyAnimeList:
         em.add_field(name="Voice Actor", value=va_url, inline=False)
         await ctx.send(embed=em)
 
+    @commands.command(name="manga")
+    async def al_manga(self, ctx, *, query):
+        """Searches Anilist for a Manga."""
+        async with ctx.typing():
+            try:
+                result = await self.klient.search_manga(query)
+            except MediaNotFound:
+                return await ctx.send(":exclamation: Manga was not found!")
+            except Exception as e:
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
+        if len(result.description) > 1024:
+            result.description = result.description[:1024 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
+        em = discord.Embed(title=result.title['english'], colour=0xFF9933)
+        em.description = ", ".join(result.genres)
+        em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
+        em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
+        em.add_field(name="Chapters", value=result.chapters or "?", inline=True)
+        em.add_field(name="Volumes", value=result.volumes or "?", inline=True)
+        em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?", inline=False)
+        em.add_field(name="Status", value=str(result.status.name).replace("_", " ").capitalize(), inline=True)
+        (year, month, day) = result.start_date.values()
+        published = f"{day}/{month}/{year}"
+        (year, month, day) = result.end_date.values() if result.end_date['day'] else ('?', '?', '?')
+        published += f" - {day}/{month}/{year}"
+        em.add_field(name="Published", value=published, inline=True)
+        em.add_field(name="Synopsis", value=result.description, inline=False)
+        em.add_field(name="Link", value=result.site_url, inline=False)
+        em.set_author(name='Anilist', icon_url=AL_ICON)
+        em.set_thumbnail(url=result.cover_image)
+        await ctx.send(embed=em)
+
+    @commands.command(name="anime")
+    async def al_anime(self, ctx, *, query):
+        """Searches Anilist for an Anime."""
+        async with ctx.typing():
+            try:
+                result = await self.klient.search_anime(query)
+            except MediaNotFound:
+                return await ctx.send(":exclamation: Anime was not found!")
+            except Exception as e:
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
+        if len(result.description) > 1024:
+            result.description = result.description[:1024 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
+        em = discord.Embed(title=result.title['english'], colour=0x02a9ff)
+        em.description = ", ".join(result.genres)
+        em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
+        em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
+        em.add_field(name="Chapters", value=result.episodes or "?", inline=True)
+        em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?", inline=False)
+        em.add_field(name="Status", value=str(result.status.name).replace("_", " ").capitalize(), inline=True)
+        (year, month, day) = result.start_date.values()
+        aired = f"{day}/{month}/{year}"
+        (year, month, day) = result.end_date.values() if result.end_date['day'] else ('?', '?', '?')
+        aired += f" - {day}/{month}/{year}"
+        em.add_field(name="Aired", value=aired, inline=True)
+        em.add_field(name="Synopsis", value=result.description, inline=False)
+        em.add_field(name="Link", value=result.site_url, inline=False)
+        em.set_author(name='Anilist', icon_url=AL_ICON)
+        em.set_thumbnail(url=result.cover_image)
+        await ctx.send(embed=em)
 
 def setup(bot):
     bot.add_cog(MyAnimeList(bot))
