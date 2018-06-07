@@ -189,7 +189,8 @@ class MyAnimeList:
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
         em.add_field(name="Chapters", value=result.chapters or "?", inline=True)
         em.add_field(name="Volumes", value=result.volumes or "?", inline=True)
-        em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?", inline=False)
+        em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?",
+                     inline=False)
         em.add_field(name="Status", value=str(result.status.name).replace("_", " ").capitalize(), inline=True)
         (year, month, day) = result.start_date.values()
         published = f"{day}/{month}/{year}"
@@ -219,7 +220,8 @@ class MyAnimeList:
         em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
         em.add_field(name="Chapters", value=result.episodes or "?", inline=True)
-        em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?", inline=False)
+        em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?",
+                     inline=False)
         em.add_field(name="Status", value=str(result.status.name).replace("_", " ").capitalize(), inline=True)
         (year, month, day) = result.start_date.values()
         aired = f"{day}/{month}/{year}"
@@ -231,6 +233,7 @@ class MyAnimeList:
         em.set_author(name='Anilist', icon_url=AL_ICON)
         em.set_thumbnail(url=result.cover_image)
         await ctx.send(embed=em)
+
 
 def setup(bot):
     bot.add_cog(MyAnimeList(bot))

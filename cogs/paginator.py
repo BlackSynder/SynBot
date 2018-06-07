@@ -6,6 +6,7 @@ import discord
 class CannotPaginate(Exception):
     pass
 
+
 class Pages:
     """Implements a paginator that queries the user for the
     pagination interface.
@@ -48,7 +49,7 @@ class Pages:
             ('\N{BLACK LEFT-POINTING TRIANGLE}', self.previous_page),
             ('\N{BLACK RIGHT-POINTING TRIANGLE}', self.next_page),
             ('\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}', self.last_page),
-            ('\N{INPUT SYMBOL FOR NUMBERS}', self.numbered_page ),
+            ('\N{INPUT SYMBOL FOR NUMBERS}', self.numbered_page),
             ('\N{BLACK SQUARE FOR STOP}', self.stop_pages),
             ('\N{INFORMATION SOURCE}', self.show_help),
         ]
@@ -132,6 +133,7 @@ class Pages:
         """lets you type a page number to go to"""
         to_delete = []
         to_delete.append(await self.message.channel.send('What page do you want to go to?'))
+
         def check(m):
             return m.content.isdigit() and m.channel == self.message.channel and m.author == self.author
         msg = await self.bot.wait_for("message", check=check, timeout=30.0)
@@ -142,7 +144,8 @@ class Pages:
             if page != 0 and page <= self.maximum_pages:
                 await self.show_page(page)
             else:
-                to_delete.append(await self.message.channel.send('Invalid page given. (%s/%s)' % (page, self.maximum_pages)))
+                _msg = await self.message.channel.send('Invalid page given. (%s/%s)' % (page, self.maximum_pages))
+                to_delete.append(_msg)
                 await asyncio.sleep(5)
         else:
             to_delete.append(await self.message.channel.send('Took too long.'))
@@ -157,14 +160,14 @@ class Pages:
         """shows this message"""
         e = discord.Embed()
         messages = ['Welcome to the interactive paginator!\n']
-        messages.append('This interactively allows you to see pages of text by navigating with ' \
+        messages.append('This interactively allows you to see pages of text by navigating with '
                         'reactions. They are as follows:\n')
 
         for (emoji, func) in self.reaction_emojis:
             messages.append('%s %s' % (emoji, func.__doc__))
 
         e.description = '\n'.join(messages)
-        e.colour =  0x738bd7 # blurple
+        e.colour = 0x738bd7  # blurple
         e.set_footer(text='We were on page %s before this message.' % self.current_page)
         await self.message.edit(embed=e)
 
@@ -179,10 +182,10 @@ class Pages:
         await self.message.delete()
         self.paginating = False
 
-
     async def paginate(self):
         """Actually paginate the entries and run the interactive loop if necessary."""
         await self.show_page(1, first=True)
+
         def react_check(reaction, user):
             if user is None or user.id != self.author.id:
                 return False
@@ -201,14 +204,14 @@ class Pages:
                 self.paginating = False
                 try:
                     await self.message.clear_reactions()
-                except:
+                except:  # noqa
                     pass
                 finally:
                     break
 
             try:
                 await self.message.remove_reaction(react[0], react[1])
-            except:
-                pass # can't remove it so don't bother doing so
+            except:  # noqa
+                pass  # can't remove it so don't bother doing so
 
             await self.match()
