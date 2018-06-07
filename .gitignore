@@ -1,3 +1,2 @@
-/__pycache__/*
-/Server\ Configs/*
-/info.py
+/__pycache__/
+.flake8
