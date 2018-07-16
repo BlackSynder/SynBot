@@ -176,7 +176,7 @@ class MyAnimeList:
         """Searches Anilist for a Manga."""
         async with ctx.typing():
             try:
-                result = await self.klient.search_manga(query)
+                result = await self.klient.search_manga(query, popularity=True)
             except MediaNotFound:
                 return await ctx.send(":exclamation: Manga was not found!")
             except Exception as e:
@@ -208,7 +208,7 @@ class MyAnimeList:
         """Searches Anilist for an Anime."""
         async with ctx.typing():
             try:
-                result = await self.klient.search_anime(query)
+                result = await self.klient.search_anime(query, popularity=True)
             except MediaNotFound:
                 return await ctx.send(":exclamation: Anime was not found!")
             except Exception as e:
