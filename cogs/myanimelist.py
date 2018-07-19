@@ -234,6 +234,27 @@ class MyAnimeList:
         em.set_thumbnail(url=result.cover_image)
         await ctx.send(embed=em)
 
+    @commands.command(name="user")
+    async def al_user(self, ctx, *, query):
+        """Searches Anilist for a User"""
+        async with ctx.typing():
+            try:
+                result = await self.klient.search_user(query)
+            except MediaNotFound:
+                return await ctx.send(":exclamation: User was not found!")
+            except Exception as e:
+                return await ctx.send(f":exclamation: An unknown error occured:\n{e}")
+        if result.about and len(result.about) > 2000:
+            result.about = result.about[:2000 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
+        em = discord.Embed(title=result.name, color=0x02a9ff)
+        em.description = result.about
+        em.add_field(name="Days Watched", value=result.stats.watched_time / 60 / 24)
+        em.add_field(name="Chapters Read", value=result.stats.chapters_read)
+        em.set_author(name='Anilist', icon_url=AL_ICON)
+        em.set_thumbnail(url=result.avatar)
+        em.set_image(url=result.banner_image)
+        await ctx.send(embed=em)
+
 
 def setup(bot):
     bot.add_cog(MyAnimeList(bot))
