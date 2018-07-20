@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 
 import discord
-import pytz
 import kadal
+import pytz
+from discord.ext import commands
 from kadal import MediaNotFound
 from tokage import TokageNotFound
-from discord.ext import commands
 
 MAL_ICON = 'https://myanimelist.cdn-dena.com/img/sp/icon/apple-touch-icon-256.png'
 AL_ICON = 'https://avatars2.githubusercontent.com/u/18018524?s=280&v=4'
@@ -248,7 +248,7 @@ class MyAnimeList:
             result.about = result.about[:2000 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
         em = discord.Embed(title=result.name, color=0x02a9ff)
         em.description = result.about
-        em.add_field(name="Days Watched", value=result.stats.watched_time / 60 / 24)
+        em.add_field(name="Days Watched", value=round(result.stats.watched_time / 60 / 24, 2))
         em.add_field(name="Chapters Read", value=result.stats.chapters_read)
         em.set_author(name='Anilist', icon_url=AL_ICON)
         em.set_thumbnail(url=result.avatar)
