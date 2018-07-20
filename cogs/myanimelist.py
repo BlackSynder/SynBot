@@ -219,7 +219,7 @@ class MyAnimeList:
         em.description = ", ".join(result.genres)
         em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
-        em.add_field(name="Chapters", value=result.episodes or "?", inline=True)
+        em.add_field(name="Episodes", value=result.episodes or "?", inline=True)
         em.add_field(name="Score", value=str(result.average_score / 10) + " / 10" if result.average_score else "?",
                      inline=False)
         em.add_field(name="Status", value=str(result.status.name).replace("_", " ").capitalize(), inline=True)
