@@ -252,7 +252,8 @@ class MyAnimeList:
         em.add_field(name="Chapters Read", value=result.stats.chapters_read)
         em.set_author(name='Anilist', icon_url=AL_ICON)
         em.set_thumbnail(url=result.avatar)
-        em.set_image(url=result.banner_image)
+        if result.banner_image:
+            em.set_image(url=result.banner_image)
         await ctx.send(embed=em)
 
 
