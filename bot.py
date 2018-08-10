@@ -5,7 +5,7 @@ import tokage
 from discord.ext import commands
 
 TOKEN = os.environ.get("BOT_TOKEN")
-extensions = ["roll", "roles", "utils", "search", "cancer", "myanimelist"]
+extensions = ["roll", "roles", "utils", "search", "cancer", "anilist"]
 startup_extensions = ["cogs." + extension for extension in extensions]
 
 
