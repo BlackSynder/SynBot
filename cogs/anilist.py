@@ -118,7 +118,7 @@ class Anilist:
             remaining = "Anime hasn't started airing yet!"
         elif result.status == kadal.MediaStatus.FINISHED:
             remaining = "Anime has finished airing!:\n\n"
-            (year, month, day) = result.end_date
+            (year, month, day) = result.end_date.values()
             remaining += f'{year}/{month}/{day}'
         embed = discord.Embed(title=result.title['english'] or result.title['romaji'], color=0x02a9ff)
         embed.add_field(name="Next Episode", value=remaining)
