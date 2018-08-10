@@ -110,7 +110,7 @@ class MyAnimeList:
                 return await ctx.send(f":exclamation: An unknown error occurred:\n{e}")
         remaining = ''
         if result.status == kadal.MediaStatus.RELEASING:
-            minutes, seconds = divmod(result.airing.time_until.total_seconds, 60)
+            minutes, seconds = divmod(result.airing.time_until.total_seconds(), 60)
             hours, minutes = divmod(minutes, 60)
             days, hours = divmod(hours, 24)
             remaining = f"{days} Days, {hours} Hours, and {minutes} Minutes"
