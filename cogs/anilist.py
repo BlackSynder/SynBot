@@ -7,7 +7,7 @@ MAL_ICON = 'https://myanimelist.cdn-dena.com/img/sp/icon/apple-touch-icon-256.pn
 AL_ICON = 'https://avatars2.githubusercontent.com/u/18018524?s=280&v=4'
 
 
-class MyAnimeList:
+class Anilist:
     def __init__(self, bot):
         self.bot = bot
         self.klient = kadal.Client()
@@ -129,4 +129,4 @@ class MyAnimeList:
 
 
 def setup(bot):
-    bot.add_cog(MyAnimeList(bot))
+    bot.add_cog(Anilist(bot))
