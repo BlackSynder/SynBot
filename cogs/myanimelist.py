@@ -13,7 +13,6 @@ class MyAnimeList:
         self.klient = kadal.Client()
         self.t_client = bot.t_client
 
-
     @commands.command(name="manga")
     async def al_manga(self, ctx, *, query):
         """Searches Anilist for a Manga."""
@@ -111,7 +110,10 @@ class MyAnimeList:
                 return await ctx.send(f":exclamation: An unknown error occurred:\n{e}")
         remaining = ''
         if result.status == kadal.MediaStatus.RELEASING:
-            remaining = "{0.days} Days, {0.hours} Hours, and {0.seconds} Seconds".format(result.airing.time_until)
+            minutes, seconds = divmod(result.airing.time_until, 60)
+            hours, minutes = divmod(minutes, 60)
+            days, hours = divmod(hours, 24)
+            remaining = f"{days} Days, {hours} Hours, and {minutes} Minutes"
         elif result.status == kadal.MediaStatus.NOT_YET_RELEASED:
             remaining = "Anime hasn't started airing yet!"
         elif result.status == kadal.MediaStatus.FINISHED:
