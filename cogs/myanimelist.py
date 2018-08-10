@@ -123,6 +123,7 @@ class MyAnimeList:
         embed.set_footer(text='Anilist')
         embed.set_author(name='Anilist', icon_url=AL_ICON)
         embed.set_thumbnail(url=result.cover_image)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
