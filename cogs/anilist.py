@@ -120,7 +120,7 @@ class Anilist:
             remaining = "Anime has finished airing!:\n\n"
             (year, month, day) = result.end_date.values()
             remaining += f'{year}/{month}/{day}'
-        embed = discord.Embed(title=result.title['english'] or result.title['romaji'], color=0x02a9ff)
+        embed = discord.Embed(title=result.title['english'] or result.title['native'], color=0x02a9ff)
         embed.add_field(name="Next Episode", value=remaining)
         embed.set_footer(text='Anilist')
         embed.set_author(name='Anilist', icon_url=AL_ICON)
