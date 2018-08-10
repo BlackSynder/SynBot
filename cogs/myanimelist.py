@@ -13,11 +13,6 @@ class MyAnimeList:
         self.klient = kadal.Client()
         self.t_client = bot.t_client
 
-    @commands.group()
-    async def mal(self, ctx):
-        """MyAnimeList commands."""
-        if ctx.invoked_subcommand is None:
-            await ctx.send(f"Invalid command. Use `{ctx.prefix}help mal` for more info")
 
     @commands.command(name="manga")
     async def al_manga(self, ctx, *, query):
