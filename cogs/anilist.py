@@ -113,7 +113,7 @@ class Anilist:
             minutes, seconds = divmod(result.airing.time_until.total_seconds(), 60)
             hours, minutes = divmod(minutes, 60)
             days, hours = divmod(hours, 24)
-            remaining = f"{days} Days, {hours} Hours, and {minutes} Minutes"
+            remaining = f"{int(days)} Days, {int(hours)} Hours, and {int(minutes)} Minutes"
         elif result.status == kadal.MediaStatus.NOT_YET_RELEASED:
             remaining = "Anime hasn't started airing yet!"
         elif result.status == kadal.MediaStatus.FINISHED:
