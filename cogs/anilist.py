@@ -109,11 +109,13 @@ class Anilist:
             except Exception as e:
                 return await ctx.send(f":exclamation: An unknown error occurred:\n{e}")
         remaining = ''
+        desc = None
         if result.status == kadal.MediaStatus.RELEASING:
             minutes, seconds = divmod(result.airing.time_until.total_seconds(), 60)
             hours, minutes = divmod(minutes, 60)
             days, hours = divmod(hours, 24)
             remaining = f"{int(days)} Days, {int(hours)} Hours, and {int(minutes)} Minutes"
+            desc = f'Next episode: #{result.airing.episode}'
         elif result.status == kadal.MediaStatus.NOT_YET_RELEASED:
             remaining = "Anime hasn't started airing yet!"
         elif result.status == kadal.MediaStatus.FINISHED:
@@ -121,7 +123,8 @@ class Anilist:
             (year, month, day) = result.end_date.values()
             remaining += f'{year}/{month}/{day}'
         embed = discord.Embed(title=result.title['english'] or result.title['native'], color=0x02a9ff)
-        embed.add_field(name="Next Episode", value=remaining)
+        embed.description = desc
+        embed.add_field(name="Airs in", value=remaining)
         embed.set_footer(text='Anilist')
         embed.set_author(name='Anilist', icon_url=AL_ICON)
         embed.set_thumbnail(url=result.cover_image)
