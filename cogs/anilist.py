@@ -25,7 +25,7 @@ class Anilist:
                 return await ctx.send(f":exclamation: An unknown error occurred:\n{e}")
         if len(result.description) > 1024:
             result.description = result.description[:1024 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
-        em = discord.Embed(title=result.title['english'], colour=0xFF9933)
+        em = discord.Embed(title=result.title['english'] or result.title['romaji'], colour=0xFF9933)
         em.description = ", ".join(result.genres)
         em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
@@ -57,7 +57,7 @@ class Anilist:
                 return await ctx.send(f":exclamation: An unknown error occurred:\n{e}")
         if len(result.description) > 1024:
             result.description = result.description[:1024 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
-        em = discord.Embed(title=result.title['english'], colour=0x02a9ff)
+        em = discord.Embed(title=result.title['english'] or result.title['romaji'], colour=0x02a9ff)
         em.description = ", ".join(result.genres)
         em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
@@ -122,7 +122,7 @@ class Anilist:
             remaining = "Anime has finished airing!:\n\n"
             (year, month, day) = result.end_date.values()
             remaining += f'{year}/{month}/{day}'
-        embed = discord.Embed(title=result.title['english'] or result.title['native'], color=0x02a9ff)
+        embed = discord.Embed(title=next(filter(None, result.title.values())), color=0x02a9ff)
         embed.description = desc
         embed.add_field(name="Airs in", value=remaining)
         embed.set_footer(text='Anilist')
