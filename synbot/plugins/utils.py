@@ -136,7 +136,7 @@ class Utilities(Plugin):
     @command()
     async def about(self, ctx):
         """Shows bot information"""
-        owner = await self.bot.get_user(self.bot.owner_id)
+        owner = self.bot.application_info.owner
         members = [m for g in self.bot.guilds.values() for m in g.members.values()]
         total = len(members)
         unique = len({m.id for m in members})

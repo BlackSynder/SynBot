@@ -27,7 +27,6 @@ class SynBot(Client):
 
     @event("ready")
     async def on_ready(self, ctx):
-        self.owner_id = 111158853839654912
         print('Logged in!')
         print(self.user.name)
         print(self.user.id)
