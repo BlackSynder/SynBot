@@ -18,6 +18,7 @@ from curious.commands import Plugin, command, conditions
 class Utilities(Plugin):
     def __init__(self, bot):
         self.bot = bot
+        super().__init__(bot)
 
     @command()
     async def ping(self, ctx):

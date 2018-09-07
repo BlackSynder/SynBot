@@ -6,6 +6,7 @@ class Cancer(Plugin):
     def __init__(self, bot):
         self.bot = bot
         self.ok_list = [198101180180594688, 246291440106340352]
+        super().__init__(bot)
 
     @event("guild_member_add")
     async def on_member_join(self, ctx, member):

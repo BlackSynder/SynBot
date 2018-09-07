@@ -12,6 +12,7 @@ class Anilist(Plugin):
         self.bot = bot
         self.klient = kadal.Client(lib='multio')
         self.bot.klient = self.klient
+        super().__init__(bot)
 
     @command(name="manga")
     async def al_manga(self, ctx, *, query):

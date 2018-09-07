@@ -9,6 +9,7 @@ from curious.commands import command, Plugin
 class Google(Plugin):
     def __init__(self, bot):
         self.bot = bot
+        super().__init__(bot)
 
     def parse_google_card(self, node):
         if node is None:
