@@ -1,15 +1,16 @@
 import random
 import re
 
-import discord
-from discord.ext import commands
+from curious import Embed
+from curious.commands import command, Plugin
 
 
-class DiceRoll:
+class DiceRoll(Plugin):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["rng", "r"])
+    # @commands.command(aliases=["rng", "r"])
+    @command(aliases=["rng", "r"])
     async def roll(self, ctx, rng):
         """Roll a dice
         Supports Addition(+), Subtraction(-), Multiplication(*, x), Division(/).
@@ -20,7 +21,7 @@ class DiceRoll:
             rolls = []
             dice_amount = int(match.group(2))
             if dice_amount > 200:
-                return await ctx.send(":exclamation: Thats WAAAAAAY too many dice!")
+                return await ctx.channel.messages.send(":exclamation: Thats WAAAAAAY too many dice!")
             dice_type = int(match.group(3))
             try:
                 # +N or -N
@@ -48,19 +49,20 @@ class DiceRoll:
                         total /= math_number
             if total < 0:
                 total = 0
-            embed = discord.Embed(title="\N{GAME DIE} Dice Rolled! \N{GAME DIE}")
+            embed = Embed(title="\N{GAME DIE} Dice Rolled! \N{GAME DIE}")
             embed.add_field(name="Dice", value=match.group(1), inline=True)
             embed.add_field(name="Results", value=rolls, inline=True)
             if match.group(4):
                 embed.add_field(name="Total", value=f"{total} ({sum(rolls)})", inline=False)
             else:
                 embed.add_field(name="Total", value=total, inline=False)
-            await ctx.send(embed=embed)
+            await ctx.channel.messages.send(embed=embed)
 
         else:
-            await ctx.send(":exclamation: Not a valid dice roll!", delete_after=10)
+            await ctx.channel.messages.send(":exclamation: Not a valid dice roll!", delete_after=10)
 
-    @commands.command(aliases=["dndroll"])
+    # @commands.command(aliases=["dndroll"])
+    @command(aliases=["dndroll"])
     async def statroll(self, ctx):
         """Roll D&D stats"""
         total = 0
@@ -75,8 +77,4 @@ class DiceRoll:
                 roll_list.remove(min(roll_list))
                 final_list.append(sum(roll_list))
             total = sum(final_list)
-        await ctx.send("Your stats are:\n{0}\nTotal roll score: {1}".format(str([x for x in final_list]), total))
-
-
-def setup(bot):
-    bot.add_cog(DiceRoll(bot))
+        await ctx.channel.messages.send("Your stats are:\n{0}\nTotal roll score: {1}".format(str([x for x in final_list]), total))

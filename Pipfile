@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+"ruamel.yaml" = "*"
+discord-curious = "*"
+multio = "*"
+trio = "*"
+kadal = "*"
+lxml = "*"
+pillow = "*"
+psutil = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"

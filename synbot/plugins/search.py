@@ -1,12 +1,12 @@
 from urllib.parse import parse_qs
 
-import aiohttp
-import discord
-from discord.ext import commands
+import asks
 from lxml import etree
+from curious import Embed
+from curious.commands import command, Plugin
 
 
-class Google:
+class Google(Plugin):
     def __init__(self, bot):
         self.bot = bot
 
@@ -14,7 +14,7 @@ class Google:
         if node is None:
             return None
 
-        e = discord.Embed(colour=0x738bd7)
+        e = Embed(colour=0x738bd7)
 
         # check if it's a calculator card:
         calculator = node.find(".//table/tr/td/span[@class='nobr']/h2[@class='r']")
@@ -177,94 +177,89 @@ class Google:
 
         # the result of a google card, an embed
         card = None
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get('https://www.google.com/search', params=params, headers=headers) as resp:
-                if resp.status != 200:
-                    raise RuntimeError('Google somehow failed to respond.')
+        resp = await asks.get('https://www.google.com/search', params=params, headers=headers)
+        if resp.status_code != 200:
+            raise RuntimeError('Google somehow failed to respond.')
 
-                root = etree.fromstring(await resp.text(), etree.HTMLParser())
+        root = etree.fromstring(resp.text, etree.HTMLParser())
 
-                # with open('google.html', 'w', encoding='utf-8') as f:
-                #     f.write(etree.tostring(root, pretty_print=True).decode('utf-8'))
+        # with open('google.html', 'w', encoding='utf-8') as f:
+        #     f.write(etree.tostring(root, pretty_print=True).decode('utf-8'))
 
-                """
-                Tree looks like this.. sort of..
-                <div class="g">
-                    ...
-                    <h3>
-                        <a href="/url?q=<url>" ...>title</a>
-                    </h3>
-                    ...
-                    <span class="st">
-                        <span class="f">date here</span>
-                        summary here, can contain <em>tag</em>
-                    </span>
-                </div>
-                """
+        """
+        Tree looks like this.. sort of..
+        <div class="g">
+            ...
+            <h3>
+                <a href="/url?q=<url>" ...>title</a>
+            </h3>
+            ...
+            <span class="st">
+                <span class="f">date here</span>
+                summary here, can contain <em>tag</em>
+            </span>
+        </div>
+        """
 
-                card_node = root.find(".//div[@id='topstuff']")
-                card = self.parse_google_card(card_node)
+        card_node = root.find(".//div[@id='topstuff']")
+        card = self.parse_google_card(card_node)
 
-                search_nodes = root.findall(".//div[@class='g']")
-                for node in search_nodes:
-                    url_node = node.find('.//h3/a')
-                    if url_node is None:
-                        continue
+        search_nodes = root.findall(".//div[@class='g']")
+        for node in search_nodes:
+            url_node = node.find('.//h3/a')
+            if url_node is None:
+                continue
 
-                    url = url_node.attrib['href']
-                    if not url.startswith('/url?'):
-                        continue
+            url = url_node.attrib['href']
+            if not url.startswith('/url?'):
+                continue
 
-                    url = parse_qs(url[5:])['q'][0]  # get the URL from ?q query string
+            url = parse_qs(url[5:])['q'][0]  # get the URL from ?q query string
 
-                    # if I ever cared about the description, this is how
-                    entries.append(url)
+            # if I ever cared about the description, this is how
+            entries.append(url)
 
-                    # short = node.find(".//span[@class='st']")
-                    # if short is None:
-                    #     entries.append((url, ''))
-                    # else:
-                    #     text = ''.join(short.itertext())
-                    #     entries.append((url, text.replace('...', '')))
+            # short = node.find(".//span[@class='st']")
+            # if short is None:
+            #     entries.append((url, ''))
+            # else:
+            #     text = ''.join(short.itertext())
+            #     entries.append((url, text.replace('...', '')))
 
         return card, entries
 
-    @commands.command(aliases=['google', 'search'])
+    @command(aliases=['google', 'search'])
     async def g(self, ctx, *, query):
         """Searches google and gives you top result."""
-        await ctx.trigger_typing()
-        try:
-            card, entries = await self.get_google_entries(query)
-        except RuntimeError as e:
-            await ctx.send(str(e))
-        else:
-            if card:
-                value = '\n'.join(entries[:3])
-                if value:
-                    card.add_field(name='Search Results', value=value, inline=False)
-                return await ctx.send(embed=card)
-
-            if len(entries) == 0:
-                return await ctx.send('No results found... sorry.')
-
-            icon = "https://cdn.discordapp.com/attachments/246291440106340352/293036111373139969/google_logo1600.png"
-            emb = discord.Embed(colour=0x77EE00, timestamp=ctx.message.created_at)
-            emb.set_author(name="Google Search", url="https://www.google.com/search?q=" + query.replace(" ", "+"),
-                           icon_url=icon)
-            next_two = entries[1:3]
-            first_entry = entries[0]
-            if first_entry[-1] == ')':
-                first_entry = first_entry[:-1] + '%29'
-
-            if next_two:
-                formatted = '\n'.join(map(lambda x: '<%s>' % x, next_two))
-                emb.add_field(name="Search Result", value=first_entry)
-                emb.add_field(name="More", value=formatted, inline=False)
+        async with ctx.channel.typing:
+            try:
+                card, entries = await self.get_google_entries(query)
+            except RuntimeError as e:
+                await ctx.channel.messages.send(str(e))
             else:
-                emb.add_field(name="Search Result", value=first_entry)
+                if card:
+                    value = '\n'.join(entries[:3])
+                    if value:
+                        card.add_field(name='Search Results', value=value, inline=False)
+                    return await ctx.channel.messages.send(embed=card)
 
-            await ctx.send(embed=emb)
+                if len(entries) == 0:
+                    return await ctx.channel.messages.send('No results found... sorry.')
 
+                icon = "https://cdn.discordapp.com/attachments/246291440106340352/293036111373139969/google_logo1600.png"
+                emb = Embed(colour=0x77EE00, timestamp=ctx.message.created_at)
+                emb.set_author(name="Google Search", url="https://www.google.com/search?q=" + query.replace(" ", "+"),
+                               icon_url=icon)
+                next_two = entries[1:3]
+                first_entry = entries[0]
+                if first_entry[-1] == ')':
+                    first_entry = first_entry[:-1] + '%29'
 
-def setup(bot):
-    bot.add_cog(Google(bot))
+                if next_two:
+                    formatted = '\n'.join(map(lambda x: '<%s>' % x, next_two))
+                    emb.add_field(name="Search Result", value=first_entry)
+                    emb.add_field(name="More", value=formatted, inline=False)
+                else:
+                    emb.add_field(name="Search Result", value=first_entry)
+
+                await ctx.channel.messages.send(embed=emb)
