@@ -26,7 +26,7 @@ class SynBot(commands.Bot):
 
     async def on_ready(self):
         self.t_client = tokage.Client()
-
+        self.owner_id = 111158853839654912
         print('Logged in!')
         print(self.user.name)
         print(self.user.id)
