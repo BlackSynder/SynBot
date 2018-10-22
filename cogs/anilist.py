@@ -27,6 +27,7 @@ class Anilist:
             result.description = result.description[:1024 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
         em = discord.Embed(title=result.title['english'] or result.title['romaji'], colour=0xFF9933)
         em.description = ", ".join(result.genres)
+        em.url = result.site_url
         em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
         em.add_field(name="Chapters", value=result.chapters or "?", inline=True)
@@ -59,6 +60,7 @@ class Anilist:
             result.description = result.description[:1024 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
         em = discord.Embed(title=result.title['english'] or result.title['romaji'], colour=0x02a9ff)
         em.description = ", ".join(result.genres)
+        em.url = result.site_url
         em.add_field(name="Japanese Title", value=result.title['native'], inline=True)
         em.add_field(name="Type", value=str(result.format.name).replace("_", " ").capitalize(), inline=True)
         em.add_field(name="Episodes", value=result.episodes or "?", inline=True)
@@ -90,6 +92,7 @@ class Anilist:
             result.about = result.about[:2000 - (len(result.site_url) + 7)] + f"[...]({result.site_url})"
         em = discord.Embed(title=result.name, color=0x02a9ff)
         em.description = result.about
+        em.url = result.site_url
         em.add_field(name="Days Watched", value=round(result.stats.watched_time / 60 / 24, 2))
         em.add_field(name="Chapters Read", value=result.stats.chapters_read)
         em.set_author(name='Anilist', icon_url=AL_ICON)
@@ -124,6 +127,7 @@ class Anilist:
             remaining += f'{year}/{month}/{day}'
         embed = discord.Embed(title=next(filter(None, result.title.values())), color=0x02a9ff)
         embed.description = desc
+        embed.url = result.site_url
         embed.add_field(name="Airs in", value=remaining)
         embed.set_footer(text='Anilist')
         embed.set_author(name='Anilist', icon_url=AL_ICON)
