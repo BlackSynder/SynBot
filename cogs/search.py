@@ -180,7 +180,9 @@ class Google:
         async with aiohttp.ClientSession() as cs:
             async with cs.get('https://www.google.com/search', params=params, headers=headers) as resp:
                 if resp.status != 200:
-                    raise RuntimeError('Google somehow failed to respond.')
+                    link = "https://www.google.com/search?q=" + query.replace(" ", "+")
+                    raise RuntimeError('Google decided to ignore the bot.\n'
+                                       'Use the following link to achieve the same result:\n' + link)
 
                 root = etree.fromstring(await resp.text(), etree.HTMLParser())
 
