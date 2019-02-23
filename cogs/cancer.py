@@ -1,4 +1,7 @@
-class Cancer:
+from discord.ext import commands
+
+
+class Cancer(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.ok_list = [198101180180594688, 246291440106340352]

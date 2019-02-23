@@ -1,7 +1,7 @@
 lxml>=3.7.3
 six>=1.10.0
 aiohttp>=2.0.6
-git+https://github.com/Rapptz/discord.py@rewrite
+git+https://github.com/Rapptz/discord.py@7ad4425c5752c855cc867e9bb1ce102db949ea88
 git+https://github.com/BlackSynder/Tokage.git
 git+https://github.com/SynderBlack/Kadal.git
 pytz

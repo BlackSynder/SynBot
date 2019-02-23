@@ -3,7 +3,7 @@ from discord.ext import commands
 from cogs.paginator import Pages
 
 
-class Roles:
+class Roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

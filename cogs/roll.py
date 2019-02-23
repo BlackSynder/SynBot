@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 
-class DiceRoll:
+class DiceRoll(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

@@ -6,7 +6,7 @@ from discord.ext import commands
 from lxml import etree
 
 
-class Google:
+class Google(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -54,7 +54,7 @@ class Google:
         if words is not None:
             e.title = 'Google Translate'
             e.add_field(name='Input', value=words[0].text, inline=True)
-            e.add_field(name='Out', value=words[1].text, inline=True)
+            e.add_field(name='Output', value=words[1].text, inline=True)
             return e
 
         # check for definition card
