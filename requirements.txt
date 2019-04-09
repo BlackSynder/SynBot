@@ -1,7 +1,7 @@
 lxml>=3.7.3
 six>=1.10.0
 aiohttp>=2.0.6
-git+https://github.com/Rapptz/discord.py@3a8214a1155ac46ca13be29600bd9c48198bb4da
+discord.py>=1.0.0
 git+https://github.com/BlackSynder/Tokage.git
 git+https://github.com/SynderBlack/Kadal.git
 pytz
