@@ -5,3 +5,4 @@ To add it to your server you can use [this link](https://discordapp.com/oauth2/a
 Misc features including dice rolls, anime and manga search, and others.
 
 Don't try to run this locally.
+fest
